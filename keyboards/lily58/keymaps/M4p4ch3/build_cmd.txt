@@ -1,1 +1,0 @@
-qmk compile -e CONVERT_TO=promicro_rp2040 -kb lily58/light -km M4p4ch3
