@@ -30,8 +30,10 @@ static void mode_leds_update(void){
 void dip_switch_update_user(uint8_t index, bool active){
     if(index == 0) {
         if(active) { // Mac mode
-            layer_move(2);
+            // Stock mapping (3 = L_STOCK)
+            layer_move(3);
         } else { // Windows mode
+            // Standard layer (0 = L_STD)
             layer_move(0);
         }
 
@@ -66,4 +68,23 @@ void housekeeping_task_user(void) {
 
     // Turn on RGB
     rgb_matrix_set_suspend_state(false);
+}
+
+// Define to avoid setting caps lock LED
+bool led_update_kb(led_t led_state) {
+    return led_update_user(led_state);
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    if ((state & 0b0110) != 0b0000) {
+        // NS or NAV layer active
+        // Not only STD or STOCK ones
+        writePin(LED_CAPS_LOCK_PIN, true);
+    }
+    else {
+        // Only STD or STOCK layer active
+        writePin(LED_CAPS_LOCK_PIN, false);
+    }
+
+    return state;
 }

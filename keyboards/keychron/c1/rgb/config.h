@@ -59,7 +59,7 @@
 #define RGB_DISABLE_WHEN_USB_SUSPENDED true
 
 
-#define TAPPING_TERM 250
-#define TAPPING_TOGGLE 2
+#define TAPPING_TERM 200
+#define TAPPING_TOGGLE 1
 
 #include "config_led.h"
