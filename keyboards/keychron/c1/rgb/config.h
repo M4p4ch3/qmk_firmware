@@ -62,4 +62,28 @@
 #define TAPPING_TERM 200
 #define TAPPING_TOGGLE 1
 
+// RGB matrix default startup settings
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
+//   HSV : white
+#define RGB_MATRIX_STARTUP_HUE 0
+#define RGB_MATRIX_STARTUP_SAT 0
+#define RGB_MATRIX_STARTUP_VAL 255
+#define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
+
+#define DISABLE_RGB_MATRIX_BREATHING
+#define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+#define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
+
+// ERA TODO update once layer order cleaned
+// #define LAYER_COLOR_0 0x00, 0x00, 0x00
+// #define LAYER_COLOR_1 0xFF, 0x00, 0x00
+// #define LAYER_COLOR_2 0x00, 0xFF, 0x00
+// #define LAYER_COLOR_3 0x00, 0x00, 0xFF
+// #define LAYER_COLOR_DFLT 0x00, 0x00, 0x00
+#define LAYER_COLOR_0 0xFF, 0x3C, 0x00
+#define LAYER_COLOR_1 0x00, 0xFF, 0x00
+#define LAYER_COLOR_2 0x00, 0x00, 0xFF
+#define LAYER_COLOR_3 0xFF, 0xFF, 0xFF
+#define LAYER_COLOR_DFLT 0x00, 0x00, 0x00
+
 #include "config_led.h"

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // - Show status of mode switch
 // - Turn LEDs off durring USB suspend
 static bool mode_leds_show = true;
-static bool mode_leds_windows;
+static bool mode_leds_windows = false;
 
 static void mode_leds_update(void){
     writePin(LED_WIN_PIN, mode_leds_show && mode_leds_windows);
@@ -30,9 +30,14 @@ static void mode_leds_update(void){
 void dip_switch_update_user(uint8_t index, bool active){
     if(index == 0) {
         if(active) { // Mac mode
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(HSV_WHITE);
             // Stock mapping (3 = L_STOCK)
             layer_move(3);
         } else { // Windows mode
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
+            // Orange
+            rgb_matrix_sethsv_noeeprom(14, 255, 255);
             // Standard layer (0 = L_STD)
             layer_move(0);
         }
@@ -47,6 +52,15 @@ void keyboard_pre_init_user(void) {
     // Setup Win & Mac LED Pins as output
     setPinOutput(LED_WIN_PIN);
     setPinOutput(LED_MAC_PIN);
+}
+
+// Called last, thus after setting RGB matrix from NVM and reading DIP switch
+void keyboard_post_init_kb(void) {
+    if (mode_leds_windows == true) {
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
+        // Orange
+        rgb_matrix_sethsv_noeeprom(14, 255, 255);
+    }
 }
 
 void suspend_power_down_user(void) {
