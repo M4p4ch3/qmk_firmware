@@ -23,7 +23,7 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 # define LAYER_COLOR_3 0x00, 0x00, 0xFF
 #endif
 #ifndef LAYER_COLOR_DFLT
-# define LAYER_COLOR_DFLT 0x00, 0x00, 0x00
+# define LAYER_COLOR_DFLT LAYER_COLOR_0
 #endif
 
 extern const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS];
@@ -49,6 +49,9 @@ static void set_rgb(RGB * pRgb, uint8_t r, uint8_t g, uint8_t b) {
 // }
 
 static void get_layer_rgb(RGB * pRgb, uint8_t layer) {
+    // RGB matrix_rgb;
+    // memset(&matrix_rgb, 0, sizeof(RGB));
+
     if (pRgb == NULL) {
         return;
     }
@@ -97,7 +100,7 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             key_layer_bitmask = 0U;
             for (uint32_t layer_idx = 0U; layer_idx <= highest_layer; layer_idx += 1U) {
                 key_code_tmp = keymaps[layer_idx][row_idx][col_idx];
-                if ((key_code_tmp != KC_NO) && (key_code_tmp != KC_TRNS)) {
+                if (key_code_tmp != KC_TRNS) {
                     // Key defined in current layer
                     //   Add layer to key layer bitmask
                     key_layer_bitmask |= 0b1 << layer_idx;
@@ -114,7 +117,7 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
                 // Get target layer
                 if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
                     ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
-                    key_target_layer = key_code & 0xFF;
+                    key_target_layer = key_code & 0x0F;
                 } else if ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) {
                     key_target_layer = (key_code >> 0x8) & 0xF;
                 }
@@ -124,8 +127,17 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             } else {
                 // Key doesn't have layer action
 
-                // Set key color to the one of its highest active layer
-                get_layer_rgb(&key_rgb, biton32(layer_state & key_layer_bitmask));
+                if (key_code == KC_NO) {
+                    // Key doesn't have keycode
+
+                    // Set key color to black
+                    set_rgb(&key_rgb, 0U, 0U, 0U);
+                } else {
+                    // Key has keycode
+
+                    // Set key color to the one of its highest active layer
+                    get_layer_rgb(&key_rgb, biton32(layer_state & key_layer_bitmask));
+                }
             }
 
             rgb_matrix_set_color(led_id, key_rgb.r, key_rgb.g, key_rgb.b);
