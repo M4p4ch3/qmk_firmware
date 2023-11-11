@@ -74,16 +74,14 @@
 #define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
 
-// ERA TODO update once layer order cleaned
-// #define LAYER_COLOR_0 0x00, 0x00, 0x00
-// #define LAYER_COLOR_1 0xFF, 0x00, 0x00
-// #define LAYER_COLOR_2 0x00, 0xFF, 0x00
-// #define LAYER_COLOR_3 0x00, 0x00, 0xFF
-// #define LAYER_COLOR_DFLT 0x00, 0x00, 0x00
-#define LAYER_COLOR_0 0xFF, 0x3C, 0x00
-#define LAYER_COLOR_1 0x00, 0xFF, 0x00
-#define LAYER_COLOR_2 0x00, 0x00, 0xFF
-#define LAYER_COLOR_3 0xFF, 0xFF, 0xFF
-#define LAYER_COLOR_DFLT 0x00, 0x00, 0x00
+// Orange
+#define LAYER_COLOR_0 0xFF, 0x50, 0x00
+#define LAYER_COLOR_1 LAYER_COLOR_0
+// Light blue
+#define LAYER_COLOR_2 0x00, 0xFF, 0xFF
+// Light green
+#define LAYER_COLOR_3 0x00, 0xFF, 0x00
+
+#define LAYER_COLOR_DFLT 0xFF, 0xFF, 0xFF
 
 #include "config_led.h"
