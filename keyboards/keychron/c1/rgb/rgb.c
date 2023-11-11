@@ -15,37 +15,66 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "rgb.h"
+#include "keycode.h"
+#include "custom_key.h"
 
-// Manage Windows and Mac LEDs
-// - Show status of mode switch
-// - Turn LEDs off durring USB suspend
-static bool mode_leds_show = true;
-static bool mode_leds_windows = false;
+#define HUE_ORANGE (14)
 
-static void mode_leds_update(void){
-    writePin(LED_WIN_PIN, mode_leds_show && mode_leds_windows);
-    writePin(LED_MAC_PIN, mode_leds_show && !mode_leds_windows);
+// Process should continue (key not processed)
+#define PROCESS_CONTINUE true
+// Process should stop (key processed)
+#define PROCESS_STOP false
+
+typedef enum DipSwitchPos_e {
+    MAC = 0,
+    WIN = 1,
+} DipSwitchPos_e;
+
+static bool mode_leds_state = true;
+static DipSwitchPos_e dip_switch_pos = MAC;
+
+static void update_mode_leds(void) {
+    bool led_mac_state = false;
+    bool led_win_state = false;
+
+    if (!mode_leds_state) {
+        return;
+    }
+
+    switch (dip_switch_pos) {
+    case MAC:
+        led_mac_state = true;
+        break;
+    case WIN:
+        led_win_state = true;
+        break;
+    }
+
+    writePin(LED_MAC_PIN, led_mac_state);
+    writePin(LED_WIN_PIN, led_win_state);
 }
 
-void dip_switch_update_user(uint8_t index, bool active){
-    if(index == 0) {
-        if(active) { // Mac mode
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(HSV_WHITE);
-            // Stock mapping (3 = L_STOCK)
-            layer_move(3);
-        } else { // Windows mode
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
-            // Orange
-            rgb_matrix_sethsv_noeeprom(14, 255, 255);
-            // Standard layer (0 = L_STD)
-            layer_move(0);
-        }
-
-        // Update mode and update leds
-        mode_leds_windows = !active;
-        mode_leds_update();
+void dip_switch_update_user(uint8_t index, bool state) {
+    if(index != 0) {
+        return;
     }
+
+    if (state) {
+        // Mac position
+        dip_switch_pos = MAC;
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_WHITE);
+        layer_move(0 /* L_STD */);
+    } else {
+        // Windows position
+        dip_switch_pos = WIN;
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
+        rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
+        layer_move(1 /* L_EXT */);
+    }
+
+    // Update mode LEDs
+    update_mode_leds();
 }
 
 void keyboard_pre_init_user(void) {
@@ -56,17 +85,16 @@ void keyboard_pre_init_user(void) {
 
 // Called last, thus after setting RGB matrix from NVM and reading DIP switch
 void keyboard_post_init_kb(void) {
-    if (mode_leds_windows == true) {
+    if (dip_switch_pos == WIN) {
         rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
-        // Orange
-        rgb_matrix_sethsv_noeeprom(14, 255, 255);
+        rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
     }
 }
 
 void suspend_power_down_user(void) {
     // Turn leds off
-    mode_leds_show = false;
-    mode_leds_update();
+    mode_leds_state = false;
+    update_mode_leds();
 
     // Suspend RGB
     rgb_matrix_set_suspend_state(true);
@@ -77,8 +105,8 @@ void suspend_power_down_user(void) {
 /// A workaround is to use housekeeping_task_user() instead.
 void housekeeping_task_user(void) {
     // Turn on
-    mode_leds_show = true;
-    mode_leds_update();
+    mode_leds_state = true;
+    update_mode_leds();
 
     // Turn on RGB
     rgb_matrix_set_suspend_state(false);
@@ -89,16 +117,27 @@ bool led_update_kb(led_t led_state) {
     return led_update_user(led_state);
 }
 
+// layer :
+//   state = 0b0100, get_highest_layer = 2
+
 layer_state_t layer_state_set_user(layer_state_t state) {
-    if ((state & 0b0110) != 0b0000) {
-        // NS or NAV layer active
-        // Not only STD or STOCK ones
+    if (get_highest_layer(state) >= 2 /* L_SYM */) {
+        // Not in standard or extension layer
         writePin(LED_CAPS_LOCK_PIN, true);
     }
     else {
-        // Only STD or STOCK layer active
+        // In standard or extension layer
         writePin(LED_CAPS_LOCK_PIN, false);
     }
 
     return state;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    if ((keycode >= KC_FN0) && (keycode <= KC_FN10)) {
+        // Custom key
+        return process_custom_key(keycode, record);
+    }
+
+    return PROCESS_CONTINUE;
 }
