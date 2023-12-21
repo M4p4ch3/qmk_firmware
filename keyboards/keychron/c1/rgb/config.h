@@ -59,7 +59,7 @@
 #define RGB_DISABLE_WHEN_USB_SUSPENDED true
 
 
-#define TAPPING_TERM 200
+#define TAPPING_TERM 150
 #define TAPPING_TOGGLE 1
 
 // RGB matrix default startup settings
