@@ -110,12 +110,14 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             }
 
             if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
+                ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
                 ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) ||
                 ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
                 // Key has layer action
 
                 // Get target layer
                 if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
+                    ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
                     ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
                     key_target_layer = key_code & 0x0F;
                 } else if ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) {
