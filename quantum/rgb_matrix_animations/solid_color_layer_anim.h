@@ -22,6 +22,15 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 #ifndef LAYER_COLOR_3
 # define LAYER_COLOR_3 0x00, 0x00, 0xFF
 #endif
+#ifndef LAYER_COLOR_4
+# define LAYER_COLOR_4 0xFF, 0xFF, 0x00
+#endif
+#ifndef LAYER_COLOR_5
+# define LAYER_COLOR_5 0xFF, 0x00, 0xFF
+#endif
+#ifndef LAYER_COLOR_6
+# define LAYER_COLOR_6 0x00, 0xFF, 0xFF
+#endif
 #ifndef LAYER_COLOR_DFLT
 # define LAYER_COLOR_DFLT LAYER_COLOR_0
 #endif
@@ -69,6 +78,15 @@ static void get_layer_rgb(RGB * pRgb, uint8_t layer) {
     case 3U:
         set_rgb(pRgb, LAYER_COLOR_3);
         break;
+    case 4U:
+        set_rgb(pRgb, LAYER_COLOR_4);
+        break;
+    case 5U:
+        set_rgb(pRgb, LAYER_COLOR_5);
+        break;
+    case 6U:
+        set_rgb(pRgb, LAYER_COLOR_6);
+        break;
     default:
         set_rgb(pRgb, LAYER_COLOR_DFLT);
         break;
@@ -112,12 +130,14 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
                 ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
                 ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) ||
+                ((key_code >= QK_TOGGLE_LAYER) && (key_code <= QK_TOGGLE_LAYER_MAX)) ||
                 ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
                 // Key has layer action
 
                 // Get target layer
                 if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
                     ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
+                    ((key_code >= QK_TOGGLE_LAYER) && (key_code <= QK_TOGGLE_LAYER_MAX)) ||
                     ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
                     key_target_layer = key_code & 0x0F;
                 } else if ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) {
