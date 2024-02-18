@@ -58,9 +58,37 @@
 /* Disable RGB while USB is sleeping */
 #define RGB_DISABLE_WHEN_USB_SUSPENDED true
 
-
+// Determines what is a tap and what is a hold
+// https://docs.qmk.fm/#/tap_hold?id=tapping-term
 #define TAPPING_TERM 150
-#define TAPPING_TOGGLE 1
+
+// Makes it possible to use a dual role key as modifier shortly after having been tapped
+//   Breaks any Tap Toggle functionality (`TT` or the One Shot Tap Toggle)
+//   Breaks ability to auto-repeat the tapping function of a dual-role key
+// On custom keymap, allows space to trigger symbols layer after tap
+//   " -  --", instead of " u  uu"
+//   But breaks space repeat
+// Outdated, now replaced QUICK_TAP_TERM
+//   Which allows to set timing
+//   https://docs.qmk.fm/#/tap_hold?id=quick-tap-term
+#define TAPPING_FORCE_HOLD
+
+// TAPPING_TOGGLE
+// Defaults to 5
+// How many taps before triggering the toggle
+// Not used anymore in keymap
+// #define TAPPING_TOGGLE 1
+
+// Holding and releasing a dual-function key without pressing another key
+// will send the original keycode even if it is outside the tapping term.
+// https://docs.qmk.fm/#/tap_hold?id=retro-tapping
+#define RETRO_TAPPING
+
+// Pressing a dual-role key, tapping another key (press and release) and then releasing the dual-role key, all within the tapping term,
+// Will result in the dual-role key to perform its hold action, instead of its tap action by default
+// https://docs.qmk.fm/#/tap_hold?id=permissive-hold
+// Seems to be the actual behaviour even without defining
+// #define PERMISSIVE_HOLD
 
 // RGB matrix default startup settings
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
@@ -81,6 +109,8 @@
 #define LAYER_COLOR_2 0x00, 0xFF, 0xFF
 // Light green
 #define LAYER_COLOR_3 0x00, 0xFF, 0x00
+// Light green
+#define LAYER_COLOR_4 0xFF, 0x00, 0xFF
 
 #define LAYER_COLOR_DFLT 0xFF, 0xFF, 0xFF
 
