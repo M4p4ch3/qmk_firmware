@@ -92,3 +92,60 @@
 /* Factory test keys */
 #define FN_KEY1 MO(1)
 #define FN_KEY2 MO(3)
+
+/* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
+#define DEBOUNCE 5
+
+// Determines what is a tap and what is a hold
+// https://docs.qmk.fm/#/tap_hold?id=tapping-term
+#define TAPPING_TERM 150
+
+// Makes it possible to use a dual role key as modifier shortly after having been tapped
+//   Breaks any Tap Toggle functionality (`TT` or the One Shot Tap Toggle)
+//   Breaks ability to auto-repeat the tapping function of a dual-role key
+// On custom keymap, allows space to trigger symbols layer after tap
+//   " -  --", instead of " u  uu"
+//   But breaks space repeat
+// Outdated, now replaced QUICK_TAP_TERM
+//   Which allows to set timing
+//   https://docs.qmk.fm/#/tap_hold?id=quick-tap-term
+// #define TAPPING_FORCE_HOLD
+#define QUICK_TAP_TERM 100
+
+// TAPPING_TOGGLE
+// Defaults to 5
+// How many taps before triggering the toggle
+// Not used anymore in keymap
+// #define TAPPING_TOGGLE 1
+
+// Holding and releasing a dual-function key without pressing another key
+// will send the original keycode even if it is outside the tapping term.
+// https://docs.qmk.fm/#/tap_hold?id=retro-tapping
+#define RETRO_TAPPING
+
+// Pressing a dual-role key, tapping another key (press and release) and then releasing the dual-role key, all within the tapping term,
+// Will result in the dual-role key to perform its hold action, instead of its tap action by default
+// https://docs.qmk.fm/#/tap_hold?id=permissive-hold
+// Seems to be the actual behaviour even without defining
+#define PERMISSIVE_HOLD
+
+// RGB matrix default startup settings
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
+#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_STARTUP_MODE
+//   HSV : white
+#define RGB_MATRIX_STARTUP_HUE 0
+#define RGB_MATRIX_STARTUP_SAT 0
+#define RGB_MATRIX_STARTUP_VAL 255
+#define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
+
+// Orange
+#define LAYER_COLOR_0 0xFF, 0x30, 0x00
+#define LAYER_COLOR_1 LAYER_COLOR_0
+// Light blue
+#define LAYER_COLOR_2 0x00, 0xFF, 0xFF
+// Light green
+#define LAYER_COLOR_3 0x00, 0xFF, 0x00
+// Light green
+#define LAYER_COLOR_4 0xFF, 0x00, 0xFF
+
+#define LAYER_COLOR_DFLT 0xFF, 0xFF, 0xFF

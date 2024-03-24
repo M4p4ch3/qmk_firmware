@@ -29,17 +29,57 @@
 #    include "factory_test.h"
 #endif
 
+// #include "rgb.h"
+// #include "config.h"
+// #include "keycode.h"
+#include "custom_key.h"
+
 #define POWER_ON_LED_DURATION 3000
+
+#define HUE_ORANGE (14)
+
+// Process should continue (key not processed)
+#define PROCESS_CONTINUE true
+// Process should stop (key processed)
+#define PROCESS_STOP false
 
 typedef struct PACKED {
     uint8_t len;
     uint8_t keycode[3];
 } key_combination_t;
 
+// DIP switches indexes
+typedef enum DipSwitcIdx_e
+{
+//   OS (Win/Android, Mac/iOS)
+    DIP_SWITCH_OS = 0U,
+//   Connexion (bluetooth, cable)
+    DIP_SWITCH_CONN = 1U,
+} DipSwitcIdx_e;
+
+// Connexion DIP switch position
+typedef enum DipSwitchConnPos_e {
+    // Cable
+    DIP_SWITCH_CONN_CABLE = 0U,
+    // Bluetooth
+    DIP_SWITCH_CONN_BT = 1U,
+} DipSwitchConnPos_e;
+
+// OS DIP switch position
+typedef enum DipSwitchOsPos_e {
+    // Mac/iOS
+    DIP_SWITCH_OS_MAC_IOS = 0U,
+    // Win/Android
+    DIP_SWITCH_OS_WIN_ANDROID = 1U,
+} DipSwitchOsPos_e;
+
 static uint32_t factory_timer_buffer            = 0;
 static uint32_t power_on_indicator_timer_buffer = 0;
 static uint32_t siri_timer_buffer               = 0;
 static uint8_t  mac_keycode[4]                  = {KC_LOPT, KC_ROPT, KC_LCMD, KC_RCMD};
+
+// static bool mode_leds_state = true;
+static DipSwitchOsPos_e dip_switch_os_pos = DIP_SWITCH_OS_MAC_IOS;
 
 key_combination_t key_comb_list[4] = {
     {2, {KC_LWIN, KC_TAB}},        // Task (win)
@@ -59,15 +99,42 @@ static void pairing_key_timer_cb(void *arg) {
 }
 #endif
 
-bool dip_switch_update_kb(uint8_t index, bool active) {
-    if (index == 0) {
-#ifdef INVERT_OS_SWITCH_STATE
-        default_layer_set(1UL << (!active ? 2 : 0));
-#else
-        default_layer_set(1UL << (active ? 2 : 0));
-#endif
+bool dip_switch_update_kb(uint8_t index, bool active)
+{
+    switch (index)
+    {
+        case DIP_SWITCH_CONN:
+            if (active == (bool) DIP_SWITCH_CONN_CABLE)
+            {
+                //
+            }
+            if (active == (bool) DIP_SWITCH_CONN_BT)
+            {
+                //
+            }
+            break;
+        case DIP_SWITCH_OS:
+            if (active == (bool) DIP_SWITCH_OS_MAC_IOS)
+            {
+                dip_switch_os_pos = DIP_SWITCH_OS_MAC_IOS;
+                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+                rgb_matrix_sethsv_noeeprom(HSV_WHITE);
+                layer_move(0 /* L_STD */);
+            }
+            else if (active == (bool) DIP_SWITCH_OS_WIN_ANDROID)
+            {
+                dip_switch_os_pos = DIP_SWITCH_OS_WIN_ANDROID;
+                // TODO
+                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
+                // rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+                rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
+                layer_move(1 /* L_EXT */);
+                break;
+            }
+            break;
+        default:
+            break;
     }
-    dip_switch_update_user(index, active);
 
     return true;
 }
@@ -137,6 +204,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+// Called last, thus after setting RGB matrix from NVM and reading DIP switch
 void keyboard_post_init_kb(void) {
     dip_switch_read(true);
 
@@ -162,7 +230,25 @@ void keyboard_post_init_kb(void) {
     writePin(H3, HOST_LED_PIN_ON_STATE);
 #endif
 
+    // if (dip_switch_os_pos == DIP_SWITCH_OS_WIN_ANDROID) {
+    //     // TODO
+    //     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
+    //     // rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    //     rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
+    // }
+
+    // layer_move(1 /* L_EXT */);
+
     keyboard_post_init_user();
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    if ((keycode >= MC_0) && (keycode <= MC_10)) {
+        // Custom key
+        return process_custom_key(keycode, record);
+    }
+
+    return PROCESS_CONTINUE;
 }
 
 void matrix_scan_kb(void) {
