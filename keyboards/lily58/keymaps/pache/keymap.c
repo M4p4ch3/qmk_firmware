@@ -168,7 +168,7 @@ static char g_sPressNb[PRESS_NB_STR_LEN] = "";
 
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
-    // oled_write(read_logo(), false);
+    oled_write(read_logo(), false);
   } else {
     // If you want to change the display of OLED, you need to change here
     // oled_write_ln(read_layer_state(), false);
