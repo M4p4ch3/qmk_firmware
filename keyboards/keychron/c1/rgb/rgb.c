@@ -85,10 +85,11 @@ void keyboard_pre_init_user(void) {
 
 // Called last, thus after setting RGB matrix from NVM and reading DIP switch
 void keyboard_post_init_kb(void) {
-    if (dip_switch_pos == WIN) {
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
-        rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
-    }
+    // Doesn't seem to be required
+    // if (dip_switch_pos == WIN) {
+    //     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
+    //     rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
+    // }
 }
 
 void suspend_power_down_user(void) {

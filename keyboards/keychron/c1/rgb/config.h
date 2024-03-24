@@ -72,6 +72,7 @@
 //   Which allows to set timing
 //   https://docs.qmk.fm/#/tap_hold?id=quick-tap-term
 #define TAPPING_FORCE_HOLD
+// #define QUICK_TAP_TERM 100
 
 // TAPPING_TOGGLE
 // Defaults to 5
