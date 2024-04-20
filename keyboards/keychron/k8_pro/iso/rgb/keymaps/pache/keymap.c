@@ -68,6 +68,7 @@ enum layer_names {
 #define KCC_APPP    MC_7
 #define KCC_QTDQ    MC_8
 #define KCC_PLMN    MC_9
+#define KCC_SLBS    MC_10
 
 const custom_key_t custom_key_list[] = {
     // BRackets ()
@@ -91,6 +92,8 @@ const custom_key_t custom_key_list[] = {
     {KCC_QTDQ,  FR_QUOT,    FR_DQUO},
     // PLus MiNus +-
     {KCC_PLMN,  FR_PLUS,    FR_MINS},
+    // SLash BackSlash /\ */
+    {KCC_SLBS,  FR_SLSH,    FR_BSLS},
 };
 
 const uint8_t CUSTOM_KEY_NB = sizeof(custom_key_list) / sizeof(custom_key_t);
@@ -157,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
             _______,    FR_LABK, KCC_CBR, KCC_SBR, KCC_BR,  KCC_QTDQ,FR_GRV,  KCC_MNPL,KCC_EQEQ,KCC_MLDV,FR_BSLS, _______, _______,                   _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | CAPSLCK    | Q      | S      | D      | F      | G      | H      | J      | K      | L      | M      | ù%     | *µ     | RETURN      |
-            MO(L_NUM),   KC_DCIR, FR_DLR,  FR_AT,   KCC_QTDQ,FR_1,    FR_0,    FR_DOT,  FR_SLSH, FR_BSLS, FR_PERC, _______, _______, _______,
+            MO(L_NUM),   KC_DCIR, FR_DLR,  FR_AT,   KCC_QTDQ,FR_1,    FR_0,    FR_DOT,  KCC_SLBS,FR_PERC, _______, _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT   | <> | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                     |           | UP     |
             _______,_______,FR_LABK, FR_HASH, FR_TILD, KCC_APPP,FR_RABK, FR_UNDS, FR_UNDS, _______, _______, _______, _______,                                 _______,
