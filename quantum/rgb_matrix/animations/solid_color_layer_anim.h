@@ -10,6 +10,9 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 
 # ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
+// Specific layer index for none layer
+#define LAYER_NONE 0xFF
+
 #ifndef LAYER_COLOR_0
 # define LAYER_COLOR_0 0xFF, 0xFF, 0xFF
 #endif
@@ -33,6 +36,9 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 #endif
 #ifndef LAYER_COLOR_DFLT
 # define LAYER_COLOR_DFLT LAYER_COLOR_0
+#endif
+#ifndef LAYER_COLOR_NONE
+# define LAYER_COLOR_NONE 0x00, 0x00, 0x00
 #endif
 
 extern const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS];
@@ -87,6 +93,9 @@ static void get_layer_rgb(RGB * pRgb, uint8_t layer) {
     case 6U:
         set_rgb(pRgb, LAYER_COLOR_6);
         break;
+    case LAYER_NONE:
+        set_rgb(pRgb, LAYER_COLOR_NONE);
+        break;
     default:
         set_rgb(pRgb, LAYER_COLOR_DFLT);
         break;
@@ -129,13 +138,16 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
 
             if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
                 ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
+                ((key_code >= QK_TOGGLE_LAYER) && (key_code <= QK_TOGGLE_LAYER_MAX)) ||
                 ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) ||
                 ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
                 // Key has layer action
 
                 // Get target layer
-                if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
-                    ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
+                if ((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) {
+                    key_target_layer = LAYER_NONE;
+                } else if (((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
+                    ((key_code >= QK_TOGGLE_LAYER) && (key_code <= QK_TOGGLE_LAYER_MAX)) ||
                     ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
                     key_target_layer = key_code & 0x0F;
                 } else if ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) {
