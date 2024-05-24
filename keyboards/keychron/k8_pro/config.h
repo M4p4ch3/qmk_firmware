@@ -115,8 +115,7 @@
 // TAPPING_TOGGLE
 // Defaults to 5
 // How many taps before triggering the toggle
-// Not used anymore in keymap
-// #define TAPPING_TOGGLE 1
+#define TAPPING_TOGGLE 2
 
 // Holding and releasing a dual-function key without pressing another key
 // will send the original keycode even if it is outside the tapping term.
@@ -149,3 +148,4 @@
 #define LAYER_COLOR_4 0xFF, 0x00, 0xFF
 
 #define LAYER_COLOR_DFLT 0xFF, 0xFF, 0xFF
+#define LAYER_COLOR_NONE 0x00, 0x00, 0x00
