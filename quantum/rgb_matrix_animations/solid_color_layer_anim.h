@@ -10,6 +10,8 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 
 # ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
+#define COLOR_BLACK 0x00, 0x00, 0x00
+
 #ifndef LAYER_COLOR_0
 # define LAYER_COLOR_0 0xFF, 0xFF, 0xFF
 #endif
@@ -38,7 +40,7 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 extern const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS];
 
 static void set_rgb(RGB * pRgb, uint8_t r, uint8_t g, uint8_t b) {
-    if (pRgb == NULL) {
+    if (!pRgb) {
         return;
     }
 
@@ -47,23 +49,12 @@ static void set_rgb(RGB * pRgb, uint8_t r, uint8_t g, uint8_t b) {
     pRgb->b = b;
 }
 
-// static void copy_rgb(RGB * pRgbDst, RGB * pRgbSrc) {
-//     if ((pRgbDst == NULL) || (pRgbSrc == NULL)) {
-//         return;
-//     }
-
-//     pRgbDst->r = pRgbSrc->r;
-//     pRgbDst->g = pRgbSrc->g;
-//     pRgbDst->b = pRgbSrc->b;
-// }
-
 static void get_layer_rgb(RGB * pRgb, uint8_t layer) {
-    // RGB matrix_rgb;
-    // memset(&matrix_rgb, 0, sizeof(RGB));
-
-    if (pRgb == NULL) {
+    if (!pRgb) {
         return;
     }
+
+    set_rgb(pRgb, LAYER_COLOR_DFLT);
 
     switch (layer) {
     case 0U:
@@ -88,77 +79,101 @@ static void get_layer_rgb(RGB * pRgb, uint8_t layer) {
         set_rgb(pRgb, LAYER_COLOR_6);
         break;
     default:
-        set_rgb(pRgb, LAYER_COLOR_DFLT);
         break;
     }
 }
 
-bool SOLID_COLOR_LAYER(effect_params_t* params) {
-    uint8_t led_id = 0U;
-    uint8_t highest_layer = 0U;
-    uint8_t key_target_layer = 0U;
-    uint16_t key_code = 0U;
-    uint16_t key_code_tmp = 0U;
-    uint32_t key_layer_bitmask = 0U;
-    RGB key_rgb;
-    memset(&key_rgb, 0, sizeof(RGB));
-    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+// Does keycode have a destination layer
+bool has_keycode_layer_dst(uint16_t kc)
+{
+    return ((kc >= QK_LAYER_TAP) && (kc <= QK_LAYER_MOD_MAX));
+}
 
-    highest_layer = get_highest_layer(layer_state);
+// Get keycode destination layer
+uint8_t get_keycode_layer_dst(uint16_t kc)
+{
+    if (!has_keycode_layer_dst(kc))
+    {
+        return 0xFF;
+    }
+
+    // Not 100/100 accurate
+    // Working as expected for :
+    // - QK_TO
+    // - QK_MOMENTARY
+    // - QK_LAYER_TAP
+    // - QK_TOGGLE_LAYER
+    // - QK_LAYER_TAP_TOGGLE
+    // - QK_LAYER_TAP
+
+    if ((kc >= QK_LAYER_TAP) && (kc <= QK_LAYER_TAP_MAX)) {
+        return ((kc >> 0x8) & 0xF);
+    }
+
+    return (kc & 0x0F);
+}
+
+bool SOLID_COLOR_LAYER(effect_params_t* params) {
+    // Declare and define min and max LED ids
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    // Highest active layer
+    uint8_t highest_layer = get_highest_layer(layer_state);
 
     for (uint8_t row_idx = 0U; row_idx < MATRIX_ROWS; row_idx += 1U) {
         for (uint8_t col_idx = 0U; col_idx < MATRIX_COLS; col_idx += 1U) {
-            led_id = g_led_config.matrix_co[row_idx][col_idx];
+            uint8_t led_id = g_led_config.matrix_co[row_idx][col_idx];
             if (led_id == 0xFF || led_id < led_min || led_id >= led_max) {
                 // Invalid LED ID, no LED at position
                 continue;
             }
 
-            // Get key code and layer bitmask (until highest layer)
-            key_layer_bitmask = 0U;
-            for (uint32_t layer_idx = 0U; layer_idx <= highest_layer; layer_idx += 1U) {
-                key_code_tmp = keymaps[layer_idx][row_idx][col_idx];
-                if (key_code_tmp != KC_TRNS) {
-                    // Key defined in current layer
-                    //   Add layer to key layer bitmask
-                    key_layer_bitmask |= 0b1 << layer_idx;
-                    //   Update active key code
-                    key_code = key_code_tmp;
+            // Looks like layer_switch_get_layer()
+            // But not able to use, as including header results in compilation errors
+
+            // Key code in its highest active layer
+            uint16_t key_code = 0U;
+            // Key highest active layer
+            uint8_t key_layer = 0U;
+
+            // Get key code and layer
+            for (uint8_t layer_idx = 0U; layer_idx <= highest_layer; layer_idx += 1U) {
+                // Assume layer 0 is always active
+                // Don't know why bit 0 of layer_state isn't set anyway
+                if ((layer_idx != 0) && ((layer_state & (1UL << layer_idx)) == 0U)) {
+                    // Layer not active
+                    continue;
                 }
+
+                uint16_t key_code_it = keymaps[layer_idx][row_idx][col_idx];
+                if (key_code_it == KC_TRNS) {
+                    // Key not defined in current layer
+                    continue;
+                }
+
+                // Update key code and layer
+                key_layer = layer_idx;
+                key_code = key_code_it;
             }
 
-            if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
-                ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
-                ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) ||
-                ((key_code >= QK_TOGGLE_LAYER) && (key_code <= QK_TOGGLE_LAYER_MAX)) ||
-                ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
-                // Key has layer action
+            // Key color
+            RGB key_rgb;
+            // Defaults to black/OFF
+            set_rgb(&key_rgb, COLOR_BLACK);
 
-                // Get target layer
-                if (((key_code >= QK_TO) && (key_code <= QK_TO_MAX)) ||
-                    ((key_code >= QK_MOMENTARY) && (key_code <= QK_MOMENTARY_MAX)) ||
-                    ((key_code >= QK_TOGGLE_LAYER) && (key_code <= QK_TOGGLE_LAYER_MAX)) ||
-                    ((key_code >= QK_LAYER_TAP_TOGGLE) && (key_code <= QK_LAYER_TAP_TOGGLE_MAX))) {
-                    key_target_layer = key_code & 0x0F;
-                } else if ((key_code >= QK_LAYER_TAP) && (key_code <= QK_LAYER_TAP_MAX)) {
-                    key_target_layer = (key_code >> 0x8) & 0xF;
-                }
+            if (has_keycode_layer_dst(key_code)) {
+                // Key has destination layer
 
-                // Set key color to the one of its target layer
-                get_layer_rgb(&key_rgb, key_target_layer);
+                // Set key color to the one of its destination layer
+                get_layer_rgb(&key_rgb, get_keycode_layer_dst(key_code));
+
             } else {
-                // Key doesn't have layer action
+                // Key doesn't have any destination layer
 
-                if (key_code == KC_NO) {
-                    // Key doesn't have keycode
+                if (key_code != KC_NO) {
+                    // Key has non null keycode
 
-                    // Set key color to black
-                    set_rgb(&key_rgb, 0U, 0U, 0U);
-                } else {
-                    // Key has keycode
-
-                    // Set key color to the one of its highest active layer
-                    get_layer_rgb(&key_rgb, biton32(layer_state & key_layer_bitmask));
+                    // Set key color to the one of its layer
+                    get_layer_rgb(&key_rgb, key_layer);
                 }
             }
 
