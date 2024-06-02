@@ -25,6 +25,12 @@ pip install wheel
 pip install -r requirements.txt
 ```
 
+Install PyQt5 dependences :
+
+```sh
+sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
+```
+
 Add udev rule to avoid having to use sudo :
 
 ```sh
