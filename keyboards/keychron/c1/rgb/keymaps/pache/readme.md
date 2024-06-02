@@ -1,7 +1,9 @@
 
 # Keychron C1 RGB pache instructions
 
-## Compile
+Based on [SonixQMK qmk_firmware sn32](https://github.com/SonixQMK/qmk_firmware/tree/sn32_develop)
+
+# Compile
 
 In `qmk_firmware/` :
 
@@ -9,11 +11,11 @@ In `qmk_firmware/` :
 qmk compile -kb keychron/c1/rgb -km pache
 ```
 
-## Flashing
+# Flashing
 
 Relying on [Sonix Flasher](https://github.com/SonixQMK/sonix-flasher/releases/tag/v0.2.1)
 
-### Setup
+## Setup
 
 ```sh
 git clone https://github.com/SonixQMK/sonix-flasher
@@ -38,7 +40,7 @@ echo 'SUBSYSTEMS=="usb", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="7040", TAG+
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
-### Flash
+## Flash
 
 ```sh
 source ./venv_sonix_flasher/bin/activate
@@ -50,4 +52,4 @@ fbs run
 - Ensure :
   - Device : SN32F24x
   - QMK offset : 0x00
-- Click `flash QMK`
+- Click `flash QMK`, select FW file, flashing starts
