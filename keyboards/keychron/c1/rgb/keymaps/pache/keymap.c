@@ -15,8 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include QMK_KEYBOARD_H
+// QMK_KEYBOARD_H evaluates to rgb.h
+// #include QMK_KEYBOARD_H
+#include "rgb.h"
 
+#include "config.h"
 #include "keymap_french.h"
 #include "custom_key.h"
 
