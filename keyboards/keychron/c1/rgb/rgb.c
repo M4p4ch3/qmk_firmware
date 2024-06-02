@@ -30,24 +30,22 @@ typedef enum DipSwitchPos_e {
     WIN = 1,
 } DipSwitchPos_e;
 
-static bool mode_leds_state = true;
+static bool mode_leds_enabled = true;
 static DipSwitchPos_e dip_switch_pos = MAC;
 
 static void update_mode_leds(void) {
     bool led_mac_state = false;
     bool led_win_state = false;
 
-    if (!mode_leds_state) {
-        return;
-    }
-
-    switch (dip_switch_pos) {
-    case MAC:
-        led_mac_state = true;
-        break;
-    case WIN:
-        led_win_state = true;
-        break;
+    if (mode_leds_enabled) {
+        switch (dip_switch_pos) {
+        case MAC:
+            led_mac_state = true;
+            break;
+        case WIN:
+            led_win_state = true;
+            break;
+        }
     }
 
     writePin(LED_MAC_PIN, led_mac_state);
@@ -83,18 +81,9 @@ void keyboard_pre_init_user(void) {
     setPinOutput(LED_MAC_PIN);
 }
 
-// Called last, thus after setting RGB matrix from NVM and reading DIP switch
-void keyboard_post_init_kb(void) {
-    // Doesn't seem to be required
-    // if (dip_switch_pos == WIN) {
-    //     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
-    //     rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
-    // }
-}
-
 void suspend_power_down_user(void) {
-    // Turn leds off
-    mode_leds_state = false;
+    // Turn mode LEDs OFF
+    mode_leds_enabled = false;
     update_mode_leds();
 
     // Suspend RGB
@@ -105,8 +94,8 @@ void suspend_power_down_user(void) {
 /// Currently the suspend_wakeup_init_user() has issues. See https://github.com/SonixQMK/qmk_firmware/issues/80
 /// A workaround is to use housekeeping_task_user() instead.
 void housekeeping_task_user(void) {
-    // Turn on
-    mode_leds_state = true;
+    // Turn mode LEDs ON
+    mode_leds_enabled = true;
     update_mode_leds();
 
     // Turn on RGB
