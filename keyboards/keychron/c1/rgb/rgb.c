@@ -113,27 +113,6 @@ void housekeeping_task_user(void) {
     rgb_matrix_set_suspend_state(false);
 }
 
-// Define to avoid setting caps lock LED
-bool led_update_kb(led_t led_state) {
-    return led_update_user(led_state);
-}
-
-// layer :
-//   state = 0b0100, get_highest_layer = 2
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    if (get_highest_layer(state) >= 2 /* L_SYM */) {
-        // Not in standard or extension layer
-        writePin(LED_CAPS_LOCK_PIN, true);
-    }
-    else {
-        // In standard or extension layer
-        writePin(LED_CAPS_LOCK_PIN, false);
-    }
-
-    return state;
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if ((keycode >= KC_FN0) && (keycode <= KC_FN10)) {
         // Custom key
