@@ -1,8 +1,7 @@
 
-Keychron C1 RGB pache instructions
-===
+# Keychron C1 RGB pache instructions
 
-# Compile
+## Compile
 
 In `qmk_firmware/` :
 
@@ -10,11 +9,11 @@ In `qmk_firmware/` :
 qmk compile -kb keychron/c1/rgb -km pache
 ```
 
-# Flashing
+## Flashing
 
 Relying on [Sonix Flasher](https://github.com/SonixQMK/sonix-flasher/releases/tag/v0.2.1)
 
-## Setup
+### Setup
 
 ```sh
 git clone https://github.com/SonixQMK/sonix-flasher
@@ -25,7 +24,7 @@ pip install wheel
 pip install -r requirements.txt
 ```
 
-Install PyQt5 dependences :
+Install PyQt5 dependencies :
 
 ```sh
 sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
@@ -39,7 +38,7 @@ echo 'SUBSYSTEMS=="usb", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="7040", TAG+
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
-## Flash
+### Flash
 
 ```sh
 source ./venv_sonix_flasher/bin/activate
@@ -49,6 +48,6 @@ fbs run
 - Make keyboard boot to bootlader (caps lock + F1)
 - Refresh keyboard detection
 - Ensure :
-    - Device : SN32F24x
-    - QMK offset : 0x00
+  - Device : SN32F24x
+  - QMK offset : 0x00
 - Click `flash QMK`
