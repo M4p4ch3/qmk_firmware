@@ -182,13 +182,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         {   _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,             _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | TAB       | A      | Z      | E      | R      | T      | Y      | U      | I      | O      | P      | ^¨     | $£     | *µ           |  | DEL    | END    | PGDN   |
-        {   _______,    KC_NO,   KC_CAPS, KC_LSFT, KC_INS,  KC_PGUP, KC_INS,  KC_HOME, KC_UP,   KC_END,  KC_NO,   KC_NO,   KC_NO,   KC_NO,            _______, _______, _______ },
+        {   _______,    KC_NO,   KC_LSFT, KC_LCTL, KC_LALT, KC_PGUP, KC_INS,  KC_HOME, KC_UP,   KC_END,  KC_NO,   KC_NO,   KC_NO,   KC_NO,            _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | CAPSLCK    | Q      | S      | D      | F      | G      | H      | J      | K      | L      | M      | ù%     | RETURN               |
-        {   KC_NO,       KC_NO,   KC_LSFT, KC_LCTL, KC_LALT, KC_PGDN, KC_BSPC, KC_LEFT, KC_DOWN, KC_RGHT, KC_DEL,  _______, KC_2TR,                   _______, _______, _______ },
+        {   KC_NO,       KC_CAPS, KC_LSFT, KC_LCTL, KC_LALT, KC_PGDN, KC_BSPC, KC_LEFT, KC_DOWN, KC_RGHT, KC_DEL,  _______, KC_2TR,                   _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT        | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                     |           | UP     |
-        {   KC_2TR,         KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_BSPC, KC_ENT,  KC_DEL,  KC_NO,   KC_2TR,                         _______, _______, _______ },
+        {   KC_2TR,         KC_NO,   KC_LSFT, KC_LCTL, KC_LALT, KC_NO,   KC_NO,   KC_BSPC, KC_ENT,  KC_DEL,  KC_NO,   KC_2TR,                         _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
         {   _______,   _______,   _______,   K_SPC(MO(L_NUM)),                                         _______,   _______,   _______,   _______,      _______, _______, _______ }
