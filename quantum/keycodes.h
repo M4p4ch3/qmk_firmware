@@ -1416,3 +1416,5 @@ enum qk_keycode_defines {
 #define IS_QUANTUM_KEYCODE(code) ((code) >= QK_BOOTLOADER && (code) <= QK_TRI_LAYER_UPPER)
 #define IS_KB_KEYCODE(code) ((code) >= QK_KB_0 && (code) <= QK_KB_31)
 #define IS_USER_KEYCODE(code) ((code) >= QK_USER_0 && (code) <= QK_USER_31)
+#define IS_LAYER_KEYCODE(code) (IS_QK_LAYER_TAP(code) || IS_QK_TO(code) || IS_QK_MOMENTARY(code) \
+    || IS_QK_DEF_LAYER(code) || IS_QK_TOGGLE_LAYER(code) || IS_QK_ONE_SHOT_LAYER(code))
