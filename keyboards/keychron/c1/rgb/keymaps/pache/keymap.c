@@ -163,7 +163,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         {   _______,    FR_LABK, KCC_CBR, KCC_SBR, KCC_BR,  FR_QUOT, _______, KCC_MNPL,KCC_EQEQ,KCC_MLDV,FR_BSLS, _______, _______, _______,          _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | CAPSLCK    | Q      | S      | D      | F      | G      | H      | J      | K      | L      | M      | ù%     | RETURN               |
-        {   MO(L_NUM),   KC_DCIR, FR_DLR,  FR_AT,   KCC_QTDQ,FR_GRV,  _______, FR_LABK, FR_RABK,FR_PERC, FR_BSLS, _______, KC_2TR,                   _______, _______, _______ },
+        {   MO(L_NUM),   KC_DCIR, FR_DLR,  FR_AT,   KCC_QTDQ,FR_GRV,  _______, FR_LABK, FR_RABK, FR_PERC, FR_BSLS, _______, KC_2TR,                   _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT        | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                     |           | UP     |
         {   KC_2TR,         FR_LABK, FR_HASH, FR_TILD, KCC_APPP,FR_RABK, FR_UNDS, FR_UNDS, _______, _______, _______, KC_2TR,                         _______, _______, _______ },
