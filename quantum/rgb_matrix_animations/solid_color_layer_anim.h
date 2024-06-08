@@ -10,31 +10,44 @@ RGB_MATRIX_EFFECT(SOLID_COLOR_LAYER)
 
 # ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
-#define COLOR_BLACK 0x00, 0x00, 0x00
+// Specific layer index for none layer
+#define LAYER_NONE 0xFF
 
-#ifndef LAYER_COLOR_0
-# define LAYER_COLOR_0 0xFF, 0xFF, 0xFF
-#endif
-#ifndef LAYER_COLOR_1
-# define LAYER_COLOR_1 0xFF, 0x00, 0x00
-#endif
-#ifndef LAYER_COLOR_2
-# define LAYER_COLOR_2 0x00, 0xFF, 0x00
-#endif
-#ifndef LAYER_COLOR_3
-# define LAYER_COLOR_3 0x00, 0x00, 0xFF
-#endif
-#ifndef LAYER_COLOR_4
-# define LAYER_COLOR_4 0xFF, 0xFF, 0x00
-#endif
-#ifndef LAYER_COLOR_5
-# define LAYER_COLOR_5 0xFF, 0x00, 0xFF
-#endif
-#ifndef LAYER_COLOR_6
-# define LAYER_COLOR_6 0x00, 0xFF, 0xFF
+#define COLOR_BLACK     0x00, 0x00, 0x00
+#define COLOR_WHITE     0xFF, 0xFF, 0xFF
+#define COLOR_RED       0xFF, 0x00, 0x00
+#define COLOR_GREEN     0x00, 0xFF, 0x00
+#define COLOR_BLUE      0x00, 0x00, 0xFF
+#define COLOR_YELLOW    0xFF, 0xFF, 0x00
+#define COLOR_MAGENTA   0xFF, 0x00, 0xFF
+#define COLOR_TEAL      0x00, 0xFF, 0xFF
+
+#ifndef LAYER_COLOR_OFF
+# define LAYER_COLOR_OFF COLOR_BLACK
 #endif
 #ifndef LAYER_COLOR_DFLT
-# define LAYER_COLOR_DFLT LAYER_COLOR_0
+# define LAYER_COLOR_DFLT COLOR_WHITE
+#endif
+#ifndef LAYER_COLOR_0
+# define LAYER_COLOR_0 COLOR_WHITE
+#endif
+#ifndef LAYER_COLOR_1
+# define LAYER_COLOR_1 COLOR_RED
+#endif
+#ifndef LAYER_COLOR_2
+# define LAYER_COLOR_2 COLOR_GREEN
+#endif
+#ifndef LAYER_COLOR_3
+# define LAYER_COLOR_3 COLOR_BLUE
+#endif
+#ifndef LAYER_COLOR_4
+# define LAYER_COLOR_4 COLOR_YELLOW
+#endif
+#ifndef LAYER_COLOR_5
+# define LAYER_COLOR_5 COLOR_MAGENTA
+#endif
+#ifndef LAYER_COLOR_6
+# define LAYER_COLOR_6 COLOR_TEAL
 #endif
 
 extern const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS];
@@ -94,7 +107,7 @@ uint8_t get_keycode_layer_dst(uint16_t kc)
 {
     if (!has_keycode_layer_dst(kc))
     {
-        return 0xFF;
+        return LAYER_NONE;
     }
 
     // Not 100/100 accurate
@@ -158,7 +171,7 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             // Key color
             RGB key_rgb;
             // Defaults to black/OFF
-            set_rgb(&key_rgb, COLOR_BLACK);
+            set_rgb(&key_rgb, LAYER_COLOR_OFF);
 
             if (has_keycode_layer_dst(key_code)) {
                 // Key has destination layer
