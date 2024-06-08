@@ -103,16 +103,19 @@
 #define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
 
-// Orange
-#define LAYER_COLOR_0 0xFF, 0x50, 0x00
-#define LAYER_COLOR_1 LAYER_COLOR_0
-// Light blue
-#define LAYER_COLOR_2 0x00, 0xFF, 0xFF
-// Light green
-#define LAYER_COLOR_3 0x00, 0xFF, 0x00
-// Light green
-#define LAYER_COLOR_4 0xFF, 0x00, 0xFF
+#define COLOR_BLACK     0x00, 0x00, 0x00
+#define COLOR_WHITE     0xFF, 0xFF, 0xFF
+#define COLOR_ORANGE    0xFF, 0x30, 0x00
+#define COLOR_TEAL      0x00, 0xFF, 0xFF
+#define COLOR_GREEN     0x00, 0xFF, 0x00
+#define COLOR_MAGENTA   0xFF, 0x00, 0xFF
 
-#define LAYER_COLOR_DFLT 0xFF, 0xFF, 0xFF
+#define LAYER_COLOR_OFF COLOR_BLACK
+#define LAYER_COLOR_DFLT COLOR_WHITE
+#define LAYER_COLOR_0 COLOR_ORANGE
+#define LAYER_COLOR_1 COLOR_ORANGE
+#define LAYER_COLOR_2 COLOR_TEAL
+#define LAYER_COLOR_3 COLOR_GREEN
+#define LAYER_COLOR_4 COLOR_MAGENTA
 
 #include "config_led.h"
