@@ -112,10 +112,11 @@
 // #define TAPPING_FORCE_HOLD
 #define QUICK_TAP_TERM 100
 
-// TAPPING_TOGGLE
-// Defaults to 5
-// How many taps before triggering the toggle
-#define TAPPING_TOGGLE 2
+// Disabled as not used
+// // TAPPING_TOGGLE
+// // Defaults to 5
+// // How many taps before triggering the toggle
+// #define TAPPING_TOGGLE 2
 
 // Holding and releasing a dual-function key without pressing another key
 // will send the original keycode even if it is outside the tapping term.
@@ -137,15 +138,17 @@
 #define RGB_MATRIX_STARTUP_VAL 255
 #define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
 
-// Orange
-#define LAYER_COLOR_0 0xFF, 0x30, 0x00
-#define LAYER_COLOR_1 LAYER_COLOR_0
-// Light blue
-#define LAYER_COLOR_2 0x00, 0xFF, 0xFF
-// Light green
-#define LAYER_COLOR_3 0x00, 0xFF, 0x00
-// Light green
-#define LAYER_COLOR_4 0xFF, 0x00, 0xFF
+#define COLOR_BLACK     0x00, 0x00, 0x00
+#define COLOR_WHITE     0xFF, 0xFF, 0xFF
+#define COLOR_ORANGE    0xFF, 0x30, 0x00
+#define COLOR_TEAL      0x00, 0xFF, 0xFF
+#define COLOR_GREEN     0x00, 0xFF, 0x00
+#define COLOR_MAGENTA   0xFF, 0x00, 0xFF
 
-#define LAYER_COLOR_DFLT 0xFF, 0xFF, 0xFF
-#define LAYER_COLOR_NONE 0x00, 0x00, 0x00
+#define LAYER_COLOR_OFF COLOR_BLACK
+#define LAYER_COLOR_DFLT COLOR_WHITE
+#define LAYER_COLOR_0 COLOR_ORANGE
+#define LAYER_COLOR_1 COLOR_ORANGE
+#define LAYER_COLOR_2 COLOR_TEAL
+#define LAYER_COLOR_3 COLOR_GREEN
+#define LAYER_COLOR_4 COLOR_MAGENTA
