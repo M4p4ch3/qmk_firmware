@@ -1,19 +1,21 @@
 
-Keychron K8 pro ISO RGB Pache
-===
+# Keychron K8 pro ISO RGB Pache
 
-## Build
+Instruction for Keychron K8 PRO ISO RGB keyboard Pache keymap
+
+# Build
 
 Either :
 
 - ```sh
   qmk compile -kb keychron/k8_pro/iso/rgb -km pache
   ```
+
 - ```sh
   make keychron/k8_pro/iso/rgb:pache
   ```
 
-## Flash
+# Flash
 
 Official `make keychron/k8_pro/iso/rgb:pache:flash` doesn't work
 `mass-erase:force` DFU `-s` option seems to be missing
