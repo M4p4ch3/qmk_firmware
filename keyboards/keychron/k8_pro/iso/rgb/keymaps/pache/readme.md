@@ -23,5 +23,5 @@ Use following instead :
 
 ```sh
 dfu-util -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force:leave -D <fw_bin_file>
-sleep 5; dfu-util -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force:leave -D keychron_k8_pro_iso_rgb_pache.bin
+sleep 10; dfu-util -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force:leave -D keychron_k8_pro_iso_rgb_pache.bin
 ```
