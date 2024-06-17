@@ -98,7 +98,7 @@
 
 // Determines what is a tap and what is a hold
 // https://docs.qmk.fm/#/tap_hold?id=tapping-term
-#define TAPPING_TERM 200
+#define TAPPING_TERM 150
 
 // Makes it possible to use a dual role key as modifier shortly after having been tapped
 //   Breaks any Tap Toggle functionality (`TT` or the One Shot Tap Toggle)
@@ -121,7 +121,7 @@
 // Holding and releasing a dual-function key without pressing another key
 // will send the original keycode even if it is outside the tapping term.
 // https://docs.qmk.fm/#/tap_hold?id=retro-tapping
-// #define RETRO_TAPPING
+#define RETRO_TAPPING
 
 // Pressing a dual-role key, tapping another key (press and release) and then releasing the dual-role key, all within the tapping term,
 // Will result in the dual-role key to perform its hold action, instead of its tap action by default
