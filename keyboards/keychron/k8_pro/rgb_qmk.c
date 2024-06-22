@@ -160,7 +160,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if ((keycode >= KC_FN0) && (keycode <= KC_FN10)) {
+    if (is_keycode_custom(keycode)) {
         // Custom key
         return process_custom_key(keycode, record);
     }

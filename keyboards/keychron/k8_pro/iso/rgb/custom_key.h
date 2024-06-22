@@ -11,4 +11,5 @@ typedef struct {
 extern const uint8_t CUSTOM_KEY_NB;
 extern const custom_key_t custom_key_list[];
 
+bool is_keycode_custom(uint16_t kc);
 bool process_custom_key(uint16_t keycode, keyrecord_t * record);

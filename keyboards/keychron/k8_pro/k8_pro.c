@@ -243,7 +243,7 @@ void keyboard_post_init_kb(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if ((keycode >= MC_0) && (keycode <= MC_10)) {
+    if (is_keycode_custom(keycode)) {
         // Custom key
         return process_custom_key(keycode, record);
     }

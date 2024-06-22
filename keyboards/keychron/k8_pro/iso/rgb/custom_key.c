@@ -14,7 +14,7 @@
 #define PROCESS_STOP false
 
 bool is_keycode_custom(uint16_t kc) {
-    return ((kc >= MC_0) && (kc <= MC_10));
+    return ((kc >= MC_0) && (kc <= MC_0 + CUSTOM_KEY_NB));
 }
 
 bool process_custom_key(uint16_t keycode, keyrecord_t *record) {
