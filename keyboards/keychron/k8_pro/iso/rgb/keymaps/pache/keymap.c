@@ -62,13 +62,14 @@ enum layer_names {
 #define KCC_CBR     MC_1
 #define KCC_SBR     MC_2
 #define KCC_MNPL    MC_3
-#define KCC_EQEQ    MC_4
+#define KCC_EQL     MC_4
 #define KCC_MLDV    MC_5
 #define KCC_BSMD    MC_6
 #define KCC_APPP    MC_7
 #define KCC_QTDQ    MC_8
 #define KCC_PLMN    MC_9
 #define KCC_SLBS    MC_10
+#define KCC_UNDS    MC_11
 
 const custom_key_t custom_key_list[] = {
     // BRackets ()
@@ -81,7 +82,7 @@ const custom_key_t custom_key_list[] = {
     {KCC_MNPL,  FR_MINS,    FR_PLUS},
     // EQual EQual ==
     // Equal as shifted symbol to allow += by rollover w/o unshifting
-    {KCC_EQEQ,  FR_EQL,     FR_EQL},
+    {KCC_EQL,   FR_EQL,     FR_EQL},
     // MuLt DiV */
     {KCC_MLDV,  FR_ASTR,    FR_SLSH},
     // BaskSlash MoDulo \%
@@ -94,6 +95,9 @@ const custom_key_t custom_key_list[] = {
     {KCC_PLMN,  FR_PLUS,    FR_MINS},
     // SLash BackSlash /\ */
     {KCC_SLBS,  FR_SLSH,    FR_BSLS},
+    // UnderScore UnderScore __
+    // Underscore as shifted symbol to allow usage when shift is held
+    {KCC_UNDS,  FR_UNDS,    FR_UNDS},
 };
 
 const uint8_t CUSTOM_KEY_NB = sizeof(custom_key_list) / sizeof(custom_key_t);
@@ -140,8 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
             _______,KC_LSFT,_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                                 _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
-            _______,   _______,   _______ /* ALT_T(FR_UNDS) */,
-                                             LT(L_SYM, KC_SPC),                                        KC_LCTL,   _______,   KC_ESC,    _______,      _______, _______, _______
+            _______,   _______,   _______,   LT(L_SYM, KC_SPC),                                        KC_LCTL,   _______,   KC_ESC,    _______,      _______, _______, _______
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
     ),
 
@@ -154,13 +157,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
             _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,             _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | TAB       | A      | Z      | E      | R      | T      | Y      | U      | I      | O      | P      | ^¨     | $£     | RETURN       |  | DEL    | END    | PGDN   |
-            _______,    FR_LABK, KCC_CBR, KCC_SBR, KCC_BR,  KCC_QTDQ,_______, KCC_MNPL,KCC_EQEQ,KCC_MLDV,FR_BSLS, _______, _______,                   _______, _______, _______,
+            _______,    FR_LABK, KCC_CBR, KCC_SBR, KCC_BR,  KCC_QTDQ,_______, KCC_MNPL,KCC_EQL, KCC_MLDV,FR_BSLS, _______, _______,                   _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | CAPSLCK    | Q      | S      | D      | F      | G      | H      | J      | K      | L      | M      | ù%     | *µ     | RETURN      |
             MO(L_NUM),   KC_DCIR, FR_DLR,  FR_AT,   KCC_QTDQ,FR_GRV,  _______, FR_LABK, FR_RABK, FR_PERC, FR_BSLS, _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT   | <> | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                     |           | UP     |
-            _______,_______,FR_LABK, FR_HASH, FR_TILD, KCC_APPP,FR_RABK, FR_UNDS, FR_UNDS, _______, _______, _______, _______,                                 _______,
+            _______,_______,FR_LABK, FR_HASH, FR_TILD, KCC_APPP,FR_RABK, KCC_UNDS,KCC_UNDS,_______, _______, _______, _______,                                 _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
             _______,   _______,   _______,   KC_NO,                                                    _______,   _______,   _______,   _______,      _______, _______, _______
@@ -179,7 +182,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
             _______,    KC_NO,   KC_LSFT, KC_LSFT, KC_INS,  KC_NO,   KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_PGUP, _______, _______,                   _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | CAPSLCK    | Q      | S      | D      | F      | G      | H      | J      | K      | L      | M      | ù%     | *µ     | RETURN      |
-            KC_NO,       KC_NO,   KC_LSFT, KC_LSFT, KC_LSFT, KC_NO,   KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, _______, _______, _______,
+            KC_NO,       KC_NO,   KC_LSFT, KC_LSFT, KC_INS,  KC_NO,   KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT   | <> | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                     |           | UP     |
             _______,_______,KC_NO,   KC_CAPS, KC_CAPS, KC_CAPS, KC_NO,   KC_ESC,  KC_BSPC, KC_ENT,  KC_DEL,  KC_ESC,  _______,                                 _______,
@@ -204,7 +207,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
             KC_NO,       _______, _______, FR_MINS, FR_PLUS, _______, _______, FR_4,    FR_5,    FR_6,    _______, _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT   | <> | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                     |           | UP     |
-            _______,_______,_______, _______, FR_COLN, FR_EQL,  _______, FR_UNDS, FR_1,    FR_2,    FR_3,    _______, _______,                                 _______,
+            _______,_______,_______, _______, FR_COLN, FR_EQL,  _______, KCC_UNDS,FR_1,    FR_2,    FR_3,    _______, _______,                                 _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
             _______,   _______,   _______,   KC_NO,                                                    FR_0,      FR_DOT,    _______,   _______,      _______, _______, _______
