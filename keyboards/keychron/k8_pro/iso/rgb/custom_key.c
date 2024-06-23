@@ -13,8 +13,16 @@
 // Process should stop (key processed)
 #define PROCESS_STOP false
 
-bool is_keycode_custom(uint16_t kc) {
-    return ((kc >= MC_0) && (kc <= MC_0 + CUSTOM_KEY_NB));
+bool is_keycode_custom(uint16_t keycode) {
+    return ((keycode >= MC_0) && (keycode <= MC_0 + CUSTOM_KEY_NB));
+}
+
+uint8_t get_custom_key_idx(uint16_t keycode) {
+    if (!is_keycode_custom(keycode)) {
+        return 0xFF;
+    }
+
+    return keycode - MC_0;
 }
 
 bool process_custom_key(uint16_t keycode, keyrecord_t *record) {
@@ -22,14 +30,9 @@ bool process_custom_key(uint16_t keycode, keyrecord_t *record) {
     uint8_t mods = 0U;
     const custom_key_t * p_custom_key = NULL;
 
-    // Ensure custom keycode
-    if (!is_keycode_custom(keycode)) {
-        return PROCESS_CONTINUE;
-    }
-
-    // Ensure custom keycode in defined custom keys list range
-    custom_key_idx = keycode - MC_0;
-    if (custom_key_idx >= CUSTOM_KEY_NB) {
+    custom_key_idx = get_custom_key_idx(keycode);
+    if (custom_key_idx == 0xFF) {
+        // Not a custom key
         return PROCESS_CONTINUE;
     }
 
