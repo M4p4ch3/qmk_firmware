@@ -6,6 +6,9 @@
 // #include QMK_KEYBOARD_H
 #include "rgb.h"
 
+// Custom keycodes aliased to function ones as not used
+#define CUSTOM_KEY_KC_FIRST KC_FN0
+
 typedef struct {
   uint16_t custom_keycode;
   uint16_t regular_keycode;
@@ -17,11 +20,11 @@ extern const custom_key_t custom_key_list[];
 
 /**
  * @brief Is keycode a custom one
- * @param kc Keycode
+ * @param keycode Keycode
  * @return true If keycode is a custom one
  * @return false If keyco isn't a custom one
  */
-bool is_keycode_custom(uint16_t kc);
+bool is_keycode_custom(uint16_t keycode);
 
 /**
  * @brief Process custom key
