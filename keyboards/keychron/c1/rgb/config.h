@@ -105,17 +105,21 @@
 
 #define COLOR_BLACK     0x00, 0x00, 0x00
 #define COLOR_WHITE     0xFF, 0xFF, 0xFF
-#define COLOR_ORANGE    0xFF, 0x30, 0x00
-#define COLOR_TEAL      0x00, 0xFF, 0xFF
+#define COLOR_RED       0xFF, 0x00, 0x00
 #define COLOR_GREEN     0x00, 0xFF, 0x00
+#define COLOR_BLUE      0x00, 0x00, 0xFF
+#define COLOR_ORANGE    0xFF, 0x30, 0x00
+#define COLOR_YELLOW    0xFF, 0xFF, 0x00
+#define COLOR_TEAL      0x00, 0xFF, 0xFF
 #define COLOR_MAGENTA   0xFF, 0x00, 0xFF
 
 #define LAYER_COLOR_OFF COLOR_BLACK
 #define LAYER_COLOR_DFLT COLOR_WHITE
 #define LAYER_COLOR_0 COLOR_ORANGE
-#define LAYER_COLOR_1 COLOR_ORANGE
+#define LAYER_COLOR_1 COLOR_YELLOW
 #define LAYER_COLOR_2 COLOR_TEAL
 #define LAYER_COLOR_3 COLOR_GREEN
 #define LAYER_COLOR_4 COLOR_MAGENTA
+#define LAYER_COLOR_5 COLOR_BLUE
 
 #include "config_led.h"
