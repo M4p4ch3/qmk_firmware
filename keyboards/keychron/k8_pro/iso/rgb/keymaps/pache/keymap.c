@@ -57,19 +57,19 @@ enum layer_names {
     L_NUM,
 };
 
-// Custom keycode, aliased to macro ones as not used
-#define KCC_BR      MC_0
-#define KCC_CBR     MC_1
-#define KCC_SBR     MC_2
-#define KCC_MNPL    MC_3
-#define KCC_EQL     MC_4
-#define KCC_MLDV    MC_5
-#define KCC_BSMD    MC_6
-#define KCC_APPP    MC_7
-#define KCC_QTDQ    MC_8
-#define KCC_PLMN    MC_9
-#define KCC_SLBS    MC_10
-#define KCC_UNDS    MC_11
+// KeyCode Custom aliases
+#define KCC_BR      CUSTOM_KEY_KC_FIRST
+#define KCC_CBR     CUSTOM_KEY_KC_FIRST + 1U
+#define KCC_SBR     CUSTOM_KEY_KC_FIRST + 2U
+#define KCC_MNPL    CUSTOM_KEY_KC_FIRST + 3U
+#define KCC_EQL     CUSTOM_KEY_KC_FIRST + 4U
+#define KCC_MLDV    CUSTOM_KEY_KC_FIRST + 5U
+#define KCC_BSMD    CUSTOM_KEY_KC_FIRST + 6U
+#define KCC_APPP    CUSTOM_KEY_KC_FIRST + 7U
+#define KCC_QTDQ    CUSTOM_KEY_KC_FIRST + 8U
+#define KCC_PLMN    CUSTOM_KEY_KC_FIRST + 9U
+#define KCC_SLBS    CUSTOM_KEY_KC_FIRST + 10U
+#define KCC_UNDS    CUSTOM_KEY_KC_FIRST + 11U
 
 const custom_key_t custom_key_list[] = {
     // BRackets ()
