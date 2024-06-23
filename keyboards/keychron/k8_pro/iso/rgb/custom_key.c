@@ -14,7 +14,7 @@
 #define PROCESS_STOP false
 
 bool is_keycode_custom(uint16_t keycode) {
-    return ((keycode >= MC_0) && (keycode <= MC_0 + CUSTOM_KEY_NB));
+    return ((keycode >= CUSTOM_KEY_KC_FIRST) && (keycode <= CUSTOM_KEY_KC_FIRST + CUSTOM_KEY_NB));
 }
 
 uint8_t get_custom_key_idx(uint16_t keycode) {
@@ -22,7 +22,7 @@ uint8_t get_custom_key_idx(uint16_t keycode) {
         return 0xFF;
     }
 
-    return keycode - MC_0;
+    return keycode - CUSTOM_KEY_KC_FIRST;
 }
 
 bool process_custom_key(uint16_t keycode, keyrecord_t *record) {
