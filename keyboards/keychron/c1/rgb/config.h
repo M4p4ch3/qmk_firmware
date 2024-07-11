@@ -83,7 +83,14 @@
 // Holding and releasing a dual-function key without pressing another key
 // will send the original keycode even if it is outside the tapping term.
 // https://docs.qmk.fm/#/tap_hold?id=retro-tapping
-#define RETRO_TAPPING
+// Disable as causing issue with shofted custom keys
+/*
+| space         |
+    | shift             |
+        | e ([])    |
+Sometimes results in "] " instead of expected "]"
+*/
+// #define RETRO_TAPPING
 
 // Pressing a dual-role key, tapping another key (press and release) and then releasing the dual-role key, all within the tapping term,
 // Will result in the dual-role key to perform its hold action, instead of its tap action by default
