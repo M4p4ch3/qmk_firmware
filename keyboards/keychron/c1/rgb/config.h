@@ -125,8 +125,8 @@ Sometimes results in "] " instead of expected "]"
 #define LAYER_COLOR_0 COLOR_ORANGE
 #define LAYER_COLOR_1 COLOR_YELLOW
 #define LAYER_COLOR_2 COLOR_TEAL
-#define LAYER_COLOR_3 COLOR_GREEN
-#define LAYER_COLOR_4 COLOR_MAGENTA
-#define LAYER_COLOR_5 COLOR_BLUE
+#define LAYER_COLOR_3 COLOR_BLUE
+#define LAYER_COLOR_4 COLOR_GREEN
+#define LAYER_COLOR_5 COLOR_MAGENTA
 
 #include "config_led.h"
