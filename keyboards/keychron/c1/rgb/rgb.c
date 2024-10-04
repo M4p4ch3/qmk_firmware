@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "rgb.h"
 #include "keycode.h"
-#include "custom_key.h"
 
 #define HUE_ORANGE (14)
 
@@ -100,13 +99,4 @@ void housekeeping_task_user(void) {
 
     // Turn on RGB
     rgb_matrix_set_suspend_state(false);
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if (is_keycode_custom(keycode)) {
-        // Custom key
-        return process_custom_key(keycode, record);
-    }
-
-    return PROCESS_CONTINUE;
 }

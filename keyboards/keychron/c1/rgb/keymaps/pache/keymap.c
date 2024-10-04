@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include "keymap_french.h"
-#include "custom_key.h"
 
 // Key codes
 #define KC_ _______
@@ -60,51 +59,6 @@ enum layer_names {
     // Numpad
     L_NUM,
 };
-
-// KeyCode Custom aliases
-#define KCC_BR      CUSTOM_KEY_KC_FIRST
-#define KCC_CBR     CUSTOM_KEY_KC_FIRST + 1U
-#define KCC_SBR     CUSTOM_KEY_KC_FIRST + 2U
-#define KCC_MNPL    CUSTOM_KEY_KC_FIRST + 3U
-#define KCC_EQL     CUSTOM_KEY_KC_FIRST + 4U
-#define KCC_MLDV    CUSTOM_KEY_KC_FIRST + 5U
-#define KCC_BSMD    CUSTOM_KEY_KC_FIRST + 6U
-#define KCC_APPP    CUSTOM_KEY_KC_FIRST + 7U
-#define KCC_QTDQ    CUSTOM_KEY_KC_FIRST + 8U
-#define KCC_PLMN    CUSTOM_KEY_KC_FIRST + 9U
-#define KCC_SLBS    CUSTOM_KEY_KC_FIRST + 10U
-#define KCC_UNDS    CUSTOM_KEY_KC_FIRST + 11U
-
-const custom_key_t custom_key_list[] = {
-    // BRackets ()
-    {KCC_BR,    FR_LPRN,    FR_RPRN},
-    // Curly BRackets {}
-    {KCC_CBR,   FR_LCBR,    FR_RCBR},
-    // Square BRackets []
-    {KCC_SBR,   FR_LBRC,    FR_RBRC},
-    // MiNus PLus -+
-    {KCC_MNPL,  FR_MINS,    FR_PLUS},
-    // EQual EQual ==
-    // Equal as shifted symbol to allow += by rollover w/o unshifting
-    {KCC_EQL,   FR_EQL,     FR_EQL},
-    // MuLt DiV */
-    {KCC_MLDV,  FR_ASTR,    FR_SLSH},
-    // BaskSlash MoDulo \%
-    {KCC_BSMD,  FR_BSLS,    FR_PERC},
-    // AmPerand PiPe &|
-    {KCC_APPP,  FR_AMPR,    FR_PIPE},
-    // QuoTe DualQuote
-    {KCC_QTDQ,  FR_QUOT,    FR_DQUO},
-    // PLus MiNus +-
-    {KCC_PLMN,  FR_PLUS,    FR_MINS},
-    // SLash BackSlash
-    {KCC_SLBS,  FR_SLSH,    FR_BSLS},
-    // UnderScore UnderScore __
-    // Underscore as shifted symbol to allow usage when shift is held
-    {KCC_UNDS,  FR_UNDS,    FR_UNDS},
-};
-
-const uint8_t CUSTOM_KEY_NB = sizeof(custom_key_list) / sizeof(custom_key_t);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_STD] = {
