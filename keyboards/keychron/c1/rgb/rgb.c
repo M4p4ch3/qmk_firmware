@@ -100,3 +100,77 @@ void housekeeping_task_user(void) {
     // Turn on RGB
     rgb_matrix_set_suspend_state(false);
 }
+
+#define L_SYM 2
+#define L_SYM_SFT 3
+
+// Similar to layer_(state_cmp, on, off) in tmk_core/common/action_layer.c
+// But working on layer state passed as argument
+// Instead on global layer_state variable
+
+static bool is_layer_on(layer_state_t state, uint8_t layer) {
+    if (!state) {
+        return layer == 0U;
+    }
+
+    return (state & (1UL << layer)) != 0U;
+}
+
+static layer_state_t set_layer_on(layer_state_t state, uint8_t layer) {
+    return state | (1UL << layer);
+}
+
+static layer_state_t set_layer_off(layer_state_t state, uint8_t layer) {
+    return state & ~(1UL << layer);
+}
+
+// Unregisted shift modifier
+static void unregister_shift(void) {
+    del_weak_mods(MOD_MASK_SHIFT);
+    del_oneshot_mods(MOD_MASK_SHIFT);
+    unregister_mods(MOD_MASK_SHIFT);
+}
+
+// Callback for layer function
+// Used to enable shifted symbols layer when shift is pressed before moving to symbols layer
+// Need to disable shifted symbols layer when moving out of symbols layer in this case
+layer_state_t layer_state_set_kb(layer_state_t state) {
+    static layer_state_t state_prev = 0U;
+
+    if (!is_layer_on(state_prev, L_SYM) && is_layer_on(state, L_SYM)) {
+        // Moving to symbols layer
+
+        if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+            unregister_shift();
+            state = set_layer_on(state, L_SYM_SFT);
+        }
+    } else if (is_layer_on(state_prev, L_SYM) && !is_layer_on(state, L_SYM)) {
+        // Moving out of symbols layer
+
+        state = set_layer_off(state, L_SYM_SFT);
+    }
+
+    state_prev = state;
+
+    return state;
+}
+
+// Callback for keycode record
+// Used to disable shifted symbols layer when shift is released
+// If shifted symbols layer enabled via custom process in layer_state_set_kb
+bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
+#define KEY_SFT_ROW 4U
+#define KEY_LSFT_COL 0U
+#define KEY_RSFT_COL 13U
+
+    // Check shift keys by key position instead of keycode
+    // Cant't rely on keycode, as set to none (KC_NO) in shifted symbols layer
+    if (!record->event.pressed && (record->event.key.row == KEY_SFT_ROW) && (
+        (record->event.key.col == KEY_LSFT_COL) || (record->event.key.col == KEY_RSFT_COL))) {
+        // Shift released
+
+        layer_off(L_SYM_SFT);
+    }
+
+    return PROCESS_CONTINUE;
+}
