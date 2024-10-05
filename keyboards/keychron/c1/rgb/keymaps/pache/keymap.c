@@ -122,9 +122,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         {   MO(L_NUM),     KC_DCIR, FR_DLR,  FR_AT,   FR_QUOT, FR_GRV,  KC_NO,   FR_LABK, FR_RABK, FR_PERC, FR_BSLS, _______, KC_2TR,                 _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT            | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                 |           | UP     |
-        {   KC_T_(LT(L_SYM_SFT, KC_CAPS)),
-                                FR_LABK, FR_HASH, FR_TILD, FR_AMPR, FR_RABK, FR_UNDS, FR_UNDS, KC_NO,   KC_NO,   KC_NO,   KC_L_(LT(L_SYM_SFT, KC_CAPS)),
-                                                                                                                                                      _______, _______, _______ },
+        {   KC_T_(MO(L_SYM_SFT)),
+                                FR_LABK, FR_HASH, FR_TILD, FR_AMPR, FR_RABK, FR_UNDS, FR_UNDS, KC_NO,   KC_NO,   KC_NO,   KC_L_(MO(L_SYM_SFT)),       _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
         {   _______,   _______,   _______,   K_SPC(KC_NO),                                             _______,   _______,   _______,   _______,      _______, _______, _______ },
@@ -162,13 +161,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         {   _______, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   _______,             _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | TAB        | A      | Z      | E      | R      | T      | Y      | U      | I      | O      | P      | ^¨     | $£     | *µ          |  | DEL    | END    | PGDN   |
-        {   _______,     KC_NO,   KC_LSFT, KC_NO,   KC_CAPS,  KC_NO,   KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_NO,  _______, _______, _______,         _______, _______, _______ },
+        {   _______,     KC_NO,   KC_LSFT, KC_NO,   KC_NO,   KC_NO,   KC_PGUP, KC_HOME, KC_UP,   KC_END,  KC_NO,   _______, _______, _______,         _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | CAPSLCK      | Q      | S      | D      | F      | G      | H      | J      | K      | L      | M      | ù%     | RETURN             |
         {   KC_NO,         KC_NO,   KC_NO,   KC_LSFT, KC_INS,  KC_NO,   KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_NO,   _______, KC_2TR,                 _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT            | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                 |           | UP     |
-        {   KC_T_(KC_NO),       KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_ESC,  KC_BSPC, KC_ENT,  KC_DEL,  KC_NO,   KC_L_(KC_NO),               _______, _______, _______ },
+        {   KC_T_(KC_NO),       KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_ESC,  KC_BSPC, KC_ENT,  KC_DEL,  KC_NO,   KC_L_(KC_CAPS),             _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
         {   _______,   _______,   _______,   K_SPC(MO(L_NUM)),                                         _______,   _______,   _______,   _______,      _______, _______, _______ },
