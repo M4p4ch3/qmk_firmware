@@ -24,6 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Process should stop (key processed)
 #define PROCESS_STOP false
 
+#define L_STD 0U
+#define L_EXT 1U
+#define L_SYM 2U
+#define L_SYM_SFT 3U
+#define L_NAV 4U
+#define L_NUM 5U
+
 typedef enum DipSwitchPos_e {
     MAC = 0,
     WIN = 1,
@@ -61,13 +68,13 @@ void dip_switch_update_user(uint8_t index, bool state) {
         dip_switch_pos = MAC;
         rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
         rgb_matrix_sethsv_noeeprom(HSV_WHITE);
-        layer_move(0 /* L_STD */);
+        layer_move(L_STD);
     } else {
         // Windows position
         dip_switch_pos = WIN;
         rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
         rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
-        layer_move(1 /* L_EXT */);
+        layer_move(L_EXT);
     }
 
     // Update mode LEDs
@@ -100,9 +107,6 @@ void housekeeping_task_user(void) {
     // Turn on RGB
     rgb_matrix_set_suspend_state(false);
 }
-
-#define L_SYM 2
-#define L_SYM_SFT 3
 
 // Similar to layer_(state_cmp, on, off) in tmk_core/common/action_layer.c
 // But working on layer state passed as argument
