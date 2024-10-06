@@ -128,7 +128,18 @@ static layer_state_t set_layer_off(layer_state_t state, uint8_t layer) {
     return state & ~(1UL << layer);
 }
 
-// Unregisted shift modifier
+static bool is_layer_entered(layer_state_t state_prev, layer_state_t state_cur, uint8_t layer) {
+    return !is_layer_on(state_prev, layer) && is_layer_on(state_cur, layer);
+}
+
+static bool is_layer_exited(layer_state_t state_prev, layer_state_t state_cur, uint8_t layer) {
+    return is_layer_on(state_prev, layer) && !is_layer_on(state_cur, layer);
+}
+
+static bool is_shift_on(void) {
+    return (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+}
+
 static void unregister_shift(void) {
     del_weak_mods(MOD_MASK_SHIFT);
     del_oneshot_mods(MOD_MASK_SHIFT);
@@ -136,23 +147,24 @@ static void unregister_shift(void) {
 }
 
 // Callback for layer function
-// Used to enable shifted symbols layer when shift is pressed before moving to symbols layer
-// Need to disable shifted symbols layer when moving out of symbols layer in this case
 layer_state_t layer_state_set_kb(layer_state_t state) {
     static layer_state_t state_prev = 0U;
 
-    if (!is_layer_on(state_prev, L_SYM) && is_layer_on(state, L_SYM)) {
-        // Moving to symbols layer
-
-        if ((get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+    // Handle L_SYM_SFT
+    //   Enable L_SYM_SFT when shift is pressed while enabling L_SYM
+    if (is_layer_entered(state_prev, state, L_SYM)) {
+        if (is_shift_on()) {
             unregister_shift();
             state = set_layer_on(state, L_SYM_SFT);
         }
-    } else if (is_layer_on(state_prev, L_SYM) && !is_layer_on(state, L_SYM)) {
-        // Moving out of symbols layer
-
+    }
+    //   Disable L_SYM_SFT whle disbabling L_SYM
+    else if (is_layer_exited(state_prev, state, L_SYM)) {
         state = set_layer_off(state, L_SYM_SFT);
     }
+
+    // Tri layer (L_SYM and L_NAV activates L_NUM)
+    state = update_tri_layer_state(state, L_SYM, L_NAV, L_NUM);
 
     state_prev = state;
 
@@ -160,15 +172,16 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
 }
 
 // Callback for keycode record
-// Used to disable shifted symbols layer when shift is released
-// If shifted symbols layer enabled via custom process in layer_state_set_kb
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 #define KEY_SFT_ROW 4U
 #define KEY_LSFT_COL 0U
 #define KEY_RSFT_COL 13U
 
-    // Check shift keys by key position instead of keycode
-    // Cant't rely on keycode, as set to none (KC_NO) in shifted symbols layer
+    // Disable L_SYM_SFT when shift is released
+    // Only relevant if L_SYM_SFT enabled via custom process in layer_state_set_kb
+    // Enabling L_SYM while shift is pressed
+    //   Check shift keys by key position instead of keycode
+    //   Cant't rely on keycode, as set to none (KC_NO) in L_SYM_SFT
     if (!record->event.pressed && (record->event.key.row == KEY_SFT_ROW) && (
         (record->event.key.col == KEY_LSFT_COL) || (record->event.key.col == KEY_RSFT_COL))) {
         // Shift released
