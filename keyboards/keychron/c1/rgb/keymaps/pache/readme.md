@@ -3,7 +3,18 @@
 
 Based on [SonixQMK qmk_firmware sn32](https://github.com/SonixQMK/qmk_firmware/tree/sn32_develop)
 
-# Compile
+# Compilation
+
+## Setup
+
+From [github qmk fw doc newbs getting started](https://github.com/M4p4ch3/qmk_firmware/blob/master/docs/newbs_getting_started.md)
+
+```sh
+python3 -m pip install --user qmk
+qmk setup
+```
+
+## Compile
 
 In `qmk_firmware/` :
 

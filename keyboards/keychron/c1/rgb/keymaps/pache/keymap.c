@@ -39,28 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //   F12
 #define K_F12 KC_F12, KC_NO
 
-enum layer_names {
-    // Standard
-    // Startup layer for Mac dip switch position
-    // Doesn't allow access to upder layers
-    // Features as few changes as possible from default keymap :
-    // - ^2 updated to <> as missing in azerty keymap on ANSI layout
-    L_STD,
-    // Extension from standard
-    // Startup layer for Windows dip switch position
-    // Allows access to upper layers
-    L_EXT,
-    // Symbols
-    L_SYM,
-    // Shifted symbols
-    L_SYM_SFT,
-    // Navigation
-    L_NAV,
-    // Numpad
-    // Accessed via tri layer (L_SYM, L_NAV)
-    L_NUM,
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [L_STD] = {
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|

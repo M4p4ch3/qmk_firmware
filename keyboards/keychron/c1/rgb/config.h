@@ -110,15 +110,17 @@ Sometimes results in "] " instead of expected "]"
 #define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
 
-#define COLOR_BLACK     0x00, 0x00, 0x00
-#define COLOR_WHITE     0xFF, 0xFF, 0xFF
-#define COLOR_RED       0xFF, 0x00, 0x00
-#define COLOR_GREEN     0x00, 0xFF, 0x00
-#define COLOR_BLUE      0x00, 0x00, 0xFF
-#define COLOR_ORANGE    0xFF, 0x30, 0x00
-#define COLOR_YELLOW    0xFF, 0xFF, 0x00
-#define COLOR_TEAL      0x00, 0xFF, 0xFF
-#define COLOR_MAGENTA   0xFF, 0x00, 0xFF
+// 0xRRGGBB
+// 0x<r:2><g:2><b:2>
+#define COLOR_BLACK     0x000000
+#define COLOR_WHITE     0xFFFFFF
+#define COLOR_RED       0xFF0000
+#define COLOR_GREEN     0x00FF00
+#define COLOR_BLUE      0x0000FF
+#define COLOR_ORANGE    0xFF3000
+#define COLOR_YELLOW    0xFFFF00
+#define COLOR_TEAL      0x00FFFF
+#define COLOR_MAGENTA   0xFF00FF
 
 #define LAYER_COLOR_OFF COLOR_BLACK
 #define LAYER_COLOR_DFLT COLOR_WHITE
@@ -128,5 +130,30 @@ Sometimes results in "] " instead of expected "]"
 #define LAYER_COLOR_3 COLOR_BLUE
 #define LAYER_COLOR_4 COLOR_GREEN
 #define LAYER_COLOR_5 COLOR_MAGENTA
+
+// Layer ID
+//   Standard
+//   Startup layer for Mac dip switch position
+//   Doesn't allow access to upder layers
+//   Features as few changes as possible from default keymap :
+//   - ^2 updated to <> as missing in azerty keymap on ANSI layout
+#define L_STD       0
+//   Extension from standard
+//   Startup layer for Windows dip switch position
+//   Allows access to upper layers
+#define L_EXT       1
+//   Symbols
+#define L_SYM       2
+//   Shifted symbols
+#define L_SYM_SFT   3
+//   Navigation
+#define L_NAV       4
+//   Numpad
+//   Accessed via tri layer (L_SYM, L_NAV)
+#define L_NUM       5
+
+#define TRI_LAYER_LOWER_LAYER   L_SYM
+#define TRI_LAYER_UPPER_LAYER   L_NAV
+#define TRI_LAYER_ADJUST_LAYER  L_NUM
 
 #include "config_led.h"

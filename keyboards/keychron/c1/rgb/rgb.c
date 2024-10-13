@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "rgb.h"
+#include "config.h"
 #include "keycode.h"
 
 #define HUE_ORANGE (14)
@@ -23,13 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PROCESS_CONTINUE true
 // Process should stop (key processed)
 #define PROCESS_STOP false
-
-#define L_STD 0U
-#define L_EXT 1U
-#define L_SYM 2U
-#define L_SYM_SFT 3U
-#define L_NAV 4U
-#define L_NUM 5U
 
 typedef enum DipSwitchPos_e {
     MAC = 0,
