@@ -32,7 +32,6 @@
 // #include "rgb.h"
 // #include "config.h"
 // #include "keycode.h"
-#include "custom_key.h"
 
 #define POWER_ON_LED_DURATION 3000
 
@@ -243,9 +242,20 @@ void keyboard_post_init_kb(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if (is_keycode_custom(keycode)) {
-        // Custom key
-        return process_custom_key(keycode, record);
+#define KEY_SFT_ROW 4
+#define KEY_LSFT_COL 0U
+#define KEY_RSFT_COL 13U
+
+    // Disable L_SYM_SFT when shift is released
+    // Only relevant if L_SYM_SFT enabled via custom process in layer_state_set_kb
+    // Enabling L_SYM while shift is pressed
+    //   Check shift keys by key position instead of keycode
+    //   Cant't rely on keycode, as set to none (KC_NO) in L_SYM_SFT
+    if (!record->event.pressed && (record->event.key.row == KEY_SFT_ROW) && (
+        (record->event.key.col == KEY_LSFT_COL) || (record->event.key.col == KEY_RSFT_COL))) {
+        // Shift released
+
+        layer_off(L_SYM_SFT);
     }
 
     return PROCESS_CONTINUE;
@@ -406,3 +416,66 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
     }
 }
 #endif
+
+// Similar to layer_(state_cmp, on, off) in tmk_core/common/action_layer.c
+// But working on layer state passed as argument
+// Instead on global layer_state variable
+
+static bool is_layer_on(layer_state_t state, uint8_t layer) {
+    if (!state) {
+        return layer == 0U;
+    }
+
+    return (state & (1UL << layer)) != 0U;
+}
+
+static layer_state_t set_layer_on(layer_state_t state, uint8_t layer) {
+    return state | (1UL << layer);
+}
+
+static layer_state_t set_layer_off(layer_state_t state, uint8_t layer) {
+    return state & ~(1UL << layer);
+}
+
+static bool is_layer_entered(layer_state_t state_prev, layer_state_t state_cur, uint8_t layer) {
+    return !is_layer_on(state_prev, layer) && is_layer_on(state_cur, layer);
+}
+
+static bool is_layer_exited(layer_state_t state_prev, layer_state_t state_cur, uint8_t layer) {
+    return is_layer_on(state_prev, layer) && !is_layer_on(state_cur, layer);
+}
+
+static bool is_shift_on(void) {
+    return (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+}
+
+static void unregister_shift(void) {
+    del_weak_mods(MOD_MASK_SHIFT);
+    del_oneshot_mods(MOD_MASK_SHIFT);
+    unregister_mods(MOD_MASK_SHIFT);
+}
+
+// Callback for layer function
+layer_state_t layer_state_set_user(layer_state_t state) {
+    static layer_state_t state_prev = 0U;
+
+    // Handle L_SYM_SFT
+    //   Enable L_SYM_SFT when shift is pressed while enabling L_SYM
+    if (is_layer_entered(state_prev, state, L_SYM)) {
+        if (is_shift_on()) {
+            unregister_shift();
+            state = set_layer_on(state, L_SYM_SFT);
+        }
+    }
+    //   Disable L_SYM_SFT whle disbabling L_SYM
+    else if (is_layer_exited(state_prev, state, L_SYM)) {
+        state = set_layer_off(state, L_SYM_SFT);
+    }
+
+    // Tri layer (L_SYM and L_NAV activates L_NUM)
+    state = update_tri_layer_state(state, L_SYM, L_NAV, L_NUM);
+
+    state_prev = state;
+
+    return state;
+}
