@@ -31,7 +31,8 @@
 
 // #include "rgb.h"
 // #include "config.h"
-// #include "keycode.h"
+#include "keycode.h"
+#include "keymap_french.h"
 
 #define POWER_ON_LED_DURATION 3000
 
@@ -241,21 +242,222 @@ void keyboard_post_init_kb(void) {
     keyboard_post_init_user();
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-#define KEY_SFT_ROW 4
+enum Accent {
+    ACCENT_NONE = 0,
+    ACCENT_ACU,
+    ACCENT_GRV,
+    ACCENT_CIRC,
+};
+
+static bool is_accent(uint16_t keycode) {
+    switch (keycode) {
+    case FR_EACU:
+    case FR_EGRV:
+        return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
+static bool is_letter(uint16_t keycode) {
+    if ((keycode >= KC_A) && (keycode <= KC_Z)) {
+        return true;
+    }
+
+    return false;
+}
+
+static bool is_accentable(uint16_t keycode) {
+    switch (keycode) {
+    case FR_A:
+    case KC_E:
+    case KC_I:
+    case KC_O:
+    case KC_U:
+        return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
+static bool is_esc(keypos_t * keypos) {
+#define KEY_CAPS_ROW 3U
+#define KEY_CAPS_COL 0U
+
+    if (!keypos) {
+        return false;
+    }
+
+    if ((keypos->row == KEY_CAPS_ROW) && (keypos->col == KEY_CAPS_COL)) {
+        return true;
+    }
+
+    return false;
+}
+
+static bool is_shift(keypos_t * keypos) {
+#define KEY_SFT_ROW 4U
 #define KEY_LSFT_COL 0U
 #define KEY_RSFT_COL 13U
+
+    if (!keypos) {
+        return false;
+    }
+
+    if ((keypos->row == KEY_SFT_ROW) &&
+        ((keypos->col == KEY_LSFT_COL) || (keypos->col == KEY_RSFT_COL))) {
+
+        return true;
+    }
+
+    return false;
+}
+
+// Get accent from keycode
+static enum Accent get_accent(uint16_t keycode) {
+    switch (keycode) {
+    case FR_EACU:
+        return ACCENT_ACU;
+        break;
+    case FR_EGRV:
+        return ACCENT_GRV;
+        break;
+    default:
+        break;
+    }
+
+    return ACCENT_NONE;
+}
+
+// Combine current accent with new one
+static enum Accent combine_accent(enum Accent current, enum Accent new) {
+    switch (current) {
+    case ACCENT_ACU:
+        if (new == ACCENT_GRV) {
+            return ACCENT_CIRC;
+        }
+
+        break;
+    case ACCENT_GRV:
+        if (new == ACCENT_ACU) {
+            return ACCENT_CIRC;
+        }
+
+        break;
+    default:
+        break;
+    }
+
+    return new;
+}
+
+static void tap_accented_letter(uint16_t keycode, enum Accent accent) {
+    switch (keycode) {
+    case FR_A:
+        switch (accent) {
+        case ACCENT_GRV:
+            tap_code16(FR_AGRV);
+            break;
+        case ACCENT_CIRC:
+            tap_code16(FR_CIRC);
+            tap_code16(FR_A);
+            break;
+        default:
+            break;
+        }
+
+        break;
+    case KC_E:
+        switch (accent) {
+        case ACCENT_ACU:
+            tap_code16(FR_EACU);
+            break;
+        case ACCENT_GRV:
+            tap_code16(FR_EGRV);
+            break;
+        case ACCENT_CIRC:
+            tap_code16(FR_CIRC);
+            tap_code16(FR_E);
+            break;
+        default:
+            break;
+        }
+
+        break;
+    case KC_I:
+        if (accent == ACCENT_CIRC) {
+            tap_code16(FR_CIRC);
+            tap_code16(FR_I);
+        }
+
+        break;
+    case KC_O:
+        if (accent == ACCENT_CIRC) {
+            tap_code16(FR_CIRC);
+            tap_code16(FR_O);
+        }
+
+        break;
+    case KC_U:
+        switch (accent) {
+        case ACCENT_GRV:
+            tap_code16(FR_UGRV);
+            break;
+        case ACCENT_CIRC:
+            tap_code16(FR_CIRC);
+            tap_code16(FR_U);
+            break;
+        default:
+            break;
+        }
+
+        break;
+    default:
+        break;
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    static enum Accent accent = ACCENT_NONE;
 
     // Disable L_SYM_SFT when shift is released
     // Only relevant if L_SYM_SFT enabled via custom process in layer_state_set_kb
     // Enabling L_SYM while shift is pressed
     //   Check shift keys by key position instead of keycode
     //   Cant't rely on keycode, as set to none (KC_NO) in L_SYM_SFT
-    if (!record->event.pressed && (record->event.key.row == KEY_SFT_ROW) && (
-        (record->event.key.col == KEY_LSFT_COL) || (record->event.key.col == KEY_RSFT_COL))) {
-        // Shift released
-
+    if (!record->event.pressed && is_shift(&record->event.key)) {
         layer_off(L_SYM_SFT);
+        return PROCESS_CONTINUE;
+    }
+
+    if (is_accent(keycode)) {
+        if (!record->event.pressed) {
+            return PROCESS_STOP;
+        }
+
+        accent = combine_accent(accent, get_accent(keycode));
+        return PROCESS_STOP;
+    }
+
+    if ((accent != ACCENT_NONE) && record->event.pressed) {
+        if (!is_accentable(keycode)) {
+            // Caps lock not caught as escape due to layer tap
+            if (is_letter(keycode) || (keycode == KC_ESC) || is_esc(&record->event.key)) {
+                accent = ACCENT_NONE;
+            }
+
+            return PROCESS_CONTINUE;
+        }
+
+        tap_accented_letter(keycode, accent);
+        accent = ACCENT_NONE;
+        return PROCESS_STOP;
     }
 
     return PROCESS_CONTINUE;
