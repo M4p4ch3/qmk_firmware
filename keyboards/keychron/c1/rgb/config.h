@@ -130,6 +130,7 @@ Sometimes results in "] " instead of expected "]"
 #define LAYER_COLOR_3 COLOR_BLUE
 #define LAYER_COLOR_4 COLOR_GREEN
 #define LAYER_COLOR_5 COLOR_MAGENTA
+#define LAYER_COLOR_6 COLOR_RED
 
 // Layer ID
 //   Standard
@@ -151,6 +152,8 @@ Sometimes results in "] " instead of expected "]"
 //   Numpad
 //   Accessed via tri layer (L_SYM, L_NAV)
 #define L_NUM       5
+//   Function
+#define L_FNCT      6
 
 #define TRI_LAYER_LOWER_LAYER   L_SYM
 #define TRI_LAYER_UPPER_LAYER   L_NAV
