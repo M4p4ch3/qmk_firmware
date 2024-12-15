@@ -36,7 +36,7 @@
 
 #define POWER_ON_LED_DURATION 3000
 
-#define HUE_ORANGE (14)
+#define HUE_ORANGE (10)
 
 // Process should continue (key not processed)
 #define PROCESS_CONTINUE true
