@@ -144,7 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
                                                                KC_NO,   KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, _______, _______, _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT   | <>     | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                 |           | UP     |
-            KC_NO,     KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_ESC,  KC_BSPC, KC_ENT,  KC_DEL,  KC_NO,   KC_CAPS,                             _______,
+            KC_NO,     KC_NO,   KC_NO,   C(KC_X), C(KC_C), C(KC_V), KC_NO,   KC_ESC,  KC_BSPC, KC_ENT,  KC_DEL,  KC_NO,   KC_CAPS,                             _______,
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
             _______,   _______,   _______,   _______,                                                  _______,   _______,   _______,   _______,      _______, _______, _______
