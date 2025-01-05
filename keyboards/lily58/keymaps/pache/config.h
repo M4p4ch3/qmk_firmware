@@ -61,3 +61,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLED_NUM 14    // Number of LEDs
 #define RGBLIGHT_SLEEP
 */
+
+// Layer ID
+//   Standard
+//   Startup layer for Mac dip switch position
+//   Doesn't allow access to upder layers
+//   Features as few changes as possible from default keymap :
+//   - ^2 updated to <> as missing in azerty keymap on ANSI layout
+#define L_STD       0
+//   Extension from standard
+//   Startup layer for Windows dip switch position
+//   Allows access to upper layers
+#define L_EXT       1
+//   Symbols
+#define L_SYM       2
+//   Shifted symbols
+#define L_SYM_SFT   3
+//   Navigation
+#define L_NAV       4
+//   Numpad
+//   Accessed via tri layer (L_SYM, L_NAV)
+#define L_NUM       5
+//   Function
+#define L_FN        6
+
+#define TRI_LAYER_LOWER_LAYER   L_SYM
+#define TRI_LAYER_UPPER_LAYER   L_NAV
+#define TRI_LAYER_ADJUST_LAYER  L_NUM
