@@ -461,7 +461,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
 
     // Toggle CAPS on double shift
-    // if (is_shift_on() && is_shift(&record->event.key)) {
     if (is_shift_on() && IS_MOD_SHIFT(GET_KC_MODS(keycode))) {
         if (record->event.pressed) {
             tap_code(KC_CAPS);
