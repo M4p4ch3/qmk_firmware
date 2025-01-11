@@ -477,8 +477,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     // To ensure ESC is tapped, and not used to change layer
     if (caps_enabled && (GET_KC_KEY(keycode) == KC_ESC)) {
         if (!record->event.pressed && !(layer_state & 0b11111100)) {
-            // Unregister ESC to complete potential terminal escape sequence
+            // Unregister and tap ESC to complete potential terminal escape sequence
             unregister_code(KC_ESC);
+            tap_code(KC_ESC);
 
             tap_code(KC_CAPS);
             caps_enabled = false;
