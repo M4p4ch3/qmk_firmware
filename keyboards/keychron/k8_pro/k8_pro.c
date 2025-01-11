@@ -467,33 +467,38 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             caps_enabled = !caps_enabled;
         }
 
+        // Avoid shift+del deleting while line
         return PROCESS_STOP;
     }
 
     // Disable CAPS on ESC
     // Check for ESC released in (STD | EXT) layer,
     // To ensure ESC is tapped, and not used to change layer
-    if (caps_enabled && (GET_KC_KEY(keycode) == KC_ESC) && !(layer_state & 0b11111100)) {
-        if (!record->event.pressed) {
+    if (caps_enabled && (GET_KC_KEY(keycode) == KC_ESC)) {
+        if (!record->event.pressed && !(layer_state & 0b11111100)) {
+            // Unregister ESC to complete potential terminal escape sequence
             unregister_code(KC_ESC);
+
             tap_code(KC_CAPS);
             caps_enabled = false;
-        }
 
-        return PROCESS_STOP;
+            // ESC already unregistered
+            return PROCESS_STOP;
+        }
     }
 
     // Handle accent
     if (is_accent(keycode)) {
-        if (!record->event.pressed) {
-            return PROCESS_STOP;
+        if (record->event.pressed) {
+            accent = combine_accent(accent, get_accent(keycode));
         }
 
-        accent = combine_accent(accent, get_accent(keycode));
+        // Dont process keycode used for accent
         return PROCESS_STOP;
     }
 
     // Handle accented character
+    // Release event not handled, doesn't seem to result in any issue
     if ((accent != ACCENT_NONE) && record->event.pressed) {
         if (!is_accentable(keycode)) {
             if (is_accent_drop(keycode)) {
@@ -505,6 +510,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
         tap_accented_letter(keycode, accent);
         accent = ACCENT_NONE;
+
+        // Accented letter already tapped
         return PROCESS_STOP;
     }
 
