@@ -437,7 +437,7 @@ static void tap_accented_letter(uint16_t keycode, enum Accent accent) {
 
 // Only handles QK_MODS and QK_MOD_TAP,
 // Not QK_LAYER_MOD, QK_ONE_SHOT_MOD, ...
-#define GET_KC_MODS(kc) ((kc < QK_MODS || kc >= QK_MOD_TAP_MAX) ? 0U : (kc >> 8U) & 0x1F)
+#define GET_KC_MODS(kc) ((kc < QK_MODS || kc > QK_MOD_TAP_MAX) ? 0U : (kc >> 8U) & 0x1F)
 
 // Handles MOD_RSFT as well
 #define IS_MOD_SHIFT(mod) (mod & MOD_LSFT)
@@ -461,13 +461,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
 
     // Toggle CAPS on double shift
-    if (is_shift_on() && IS_MOD_SHIFT(GET_KC_MODS(keycode))) {
+    // Restrict to (STD | EXT) layer to avoid unexpected CAPS after selection
+    if (is_shift_on() && IS_MOD_SHIFT(GET_KC_MODS(keycode)) && !(layer_state & 0b11111100)) {
         if (record->event.pressed) {
             tap_code(KC_CAPS);
             caps_enabled = !caps_enabled;
         }
 
-        // Avoid shift+del deleting while line
+        // Avoid shift+del deleting whole line
         return PROCESS_STOP;
     }
 
