@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode.h"
 #include "keymap.h"
 #include "keymap_french.h"
+#include "quantum_keycodes.h"
 
 #define HUE_ORANGE (14)
 
@@ -167,6 +168,39 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
     return state;
 }
 
+// static bool is_esc(keypos_t * keypos) {
+// #define KEY_CAPS_ROW 3U
+// #define KEY_CAPS_COL 0U
+
+//     if (!keypos) {
+//         return false;
+//     }
+
+//     if ((keypos->row == KEY_CAPS_ROW) && (keypos->col == KEY_CAPS_COL)) {
+//         return true;
+//     }
+
+//     return false;
+// }
+
+static bool is_shift(keypos_t * keypos) {
+#define KEY_SFT_ROW 4U
+#define KEY_LSFT_COL 0U
+#define KEY_RSFT_COL 13U
+
+    if (!keypos) {
+        return false;
+    }
+
+    if ((keypos->row == KEY_SFT_ROW) &&
+        ((keypos->col == KEY_LSFT_COL) || (keypos->col == KEY_RSFT_COL))) {
+
+        return true;
+    }
+
+    return false;
+}
+
 enum Accent {
     ACCENT_NONE = 0,
     ACCENT_ACU,
@@ -187,9 +221,37 @@ static bool is_accent(uint16_t keycode) {
     return false;
 }
 
-static bool is_letter(uint16_t keycode) {
+static bool is_accent_drop(uint16_t keycode) {
     if ((keycode >= KC_A) && (keycode <= KC_Z)) {
         return true;
+    }
+
+    if ((keycode >= KC_1) && (keycode <= KC_0)) {
+        return true;
+    }
+
+    if ((keycode >= KC_F1) && (keycode <= KC_F12)) {
+        return true;
+    }
+
+    switch (keycode) {
+    case KC_ENT:
+    case KC_ESC:
+    case KC_BSPC:
+    case KC_TAB:
+    case KC_SPC:
+    case KC_LEFT:
+    case KC_RIGHT:
+    case KC_UP:
+    case KC_DOWN:
+    case KC_HOME:
+    case KC_END:
+    case KC_PGUP:
+    case KC_PGDN:
+    case KC_DEL:
+        return true;
+    default:
+        break;
     }
 
     return false;
@@ -206,39 +268,6 @@ static bool is_accentable(uint16_t keycode) {
         break;
     default:
         break;
-    }
-
-    return false;
-}
-
-static bool is_esc(keypos_t * keypos) {
-#define KEY_CAPS_ROW 3U
-#define KEY_CAPS_COL 0U
-
-    if (!keypos) {
-        return false;
-    }
-
-    if ((keypos->row == KEY_CAPS_ROW) && (keypos->col == KEY_CAPS_COL)) {
-        return true;
-    }
-
-    return false;
-}
-
-static bool is_shift(keypos_t * keypos) {
-#define KEY_SFT_ROW 4U
-#define KEY_LSFT_COL 0U
-#define KEY_RSFT_COL 13U
-
-    if (!keypos) {
-        return false;
-    }
-
-    if ((keypos->row == KEY_SFT_ROW) &&
-        ((keypos->col == KEY_LSFT_COL) || (keypos->col == KEY_RSFT_COL))) {
-
-        return true;
     }
 
     return false;
@@ -283,98 +312,120 @@ static enum Accent combine_accent(enum Accent current, enum Accent new) {
 }
 
 static void tap_accented_letter(uint16_t keycode, enum Accent accent) {
-    switch (keycode) {
-    case FR_A:
-        switch (accent) {
-        case ACCENT_GRV:
+    bool tap = true;
+
+    switch (accent) {
+    case ACCENT_ACU:
+        if (keycode == KC_E) {
+            tap_code16(FR_EACU);
+        } else {
+            tap = false;
+        }
+        break;
+    case ACCENT_GRV:
+        switch (keycode) {
+        case FR_A:
             tap_code16(FR_AGRV);
             break;
-        case ACCENT_CIRC:
-            tap_code16(FR_CIRC);
-            tap_code16(FR_A);
-            break;
-        default:
-            break;
-        }
-
-        break;
-    case KC_E:
-        switch (accent) {
-        case ACCENT_ACU:
-            tap_code16(FR_EACU);
-            break;
-        case ACCENT_GRV:
+        case KC_E:
             tap_code16(FR_EGRV);
             break;
-        case ACCENT_CIRC:
-            tap_code16(FR_CIRC);
-            tap_code16(FR_E);
-            break;
-        default:
-            break;
-        }
-
-        break;
-    case KC_I:
-        if (accent == ACCENT_CIRC) {
-            tap_code16(FR_CIRC);
-            tap_code16(FR_I);
-        }
-
-        break;
-    case KC_O:
-        if (accent == ACCENT_CIRC) {
-            tap_code16(FR_CIRC);
-            tap_code16(FR_O);
-        }
-
-        break;
-    case KC_U:
-        switch (accent) {
-        case ACCENT_GRV:
+        case KC_U:
             tap_code16(FR_UGRV);
             break;
-        case ACCENT_CIRC:
-            tap_code16(FR_CIRC);
-            tap_code16(FR_U);
-            break;
         default:
+            tap = false;
             break;
         }
-
+        break;
+    case ACCENT_CIRC:
+        tap_code16(FR_CIRC);
+        tap_code16(keycode);
         break;
     default:
+        tap = false;
         break;
+    }
+
+    if (!tap) {
+        tap_code16(keycode);
     }
 }
 
+#define GET_KC_KEY(kc) (kc & 0xFF)
+
+// Only handles QK_MODS and QK_MOD_TAP,
+// Not QK_LAYER_MOD, QK_ONE_SHOT_MOD, ...
+#define GET_KC_MODS(kc) (((kc < QK_MODS || kc > QK_MODS_MAX) && (kc < QK_MOD_TAP || kc > QK_MOD_TAP_MAX)) ? 0U : (kc >> 8U) & 0x1F)
+
+// Handles MOD_RSFT as well
+#define IS_MOD_SHIFT(mod) (mod & MOD_LSFT)
+
 // Callback for keycode record
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
+    static bool caps_enabled = false;
     static enum Accent accent = ACCENT_NONE;
 
     // Disable L_SYM_SFT when shift is released
-    // Only relevant if L_SYM_SFT enabled via custom process in layer_state_set_kb
-    // Enabling L_SYM while shift is pressed
-    //   Check shift keys by key position instead of keycode
-    //   Cant't rely on keycode, as set to none (KC_NO) in L_SYM_SFT
+    // Only relevant if L_SYM_SFT entered via custom process in layer_state_set_kb
+    //   (Enabling L_SYM while shift is pressed)
+    // Check shift keys by key position instead of keycode
+    //   Cant't rely on keycode, as shift is part of several other keys
     if (!record->event.pressed && is_shift(&record->event.key)) {
         layer_off(L_SYM_SFT);
         return PROCESS_CONTINUE;
     }
 
-    if (is_accent(keycode)) {
-        if (!record->event.pressed) {
-            return PROCESS_STOP;
+    // Maintain CAPS state consistent
+    if ((GET_KC_KEY(keycode) == KC_CAPS) && record->event.pressed) {
+        caps_enabled = !caps_enabled;
+        return PROCESS_CONTINUE;
+    }
+
+    // Toggle CAPS on double shift
+    // Restrict to (STD | EXT) layer to avoid unexpected CAPS after selection
+    if (is_shift_on() && is_shift(&record->event.key) && !(layer_state & 0b11111100)) {
+        if (record->event.pressed) {
+            tap_code(KC_CAPS);
+            caps_enabled = !caps_enabled;
         }
 
-        accent = combine_accent(accent, get_accent(keycode));
+        // Avoid shift+del deleting whole line
         return PROCESS_STOP;
     }
 
+    // Disable CAPS on ESC
+    // Check for ESC released in (STD | EXT) layer,
+    // To ensure ESC is tapped, and not used to change layer
+    if (caps_enabled && (GET_KC_KEY(keycode) == KC_ESC)) {
+        if (!record->event.pressed && !(layer_state & 0b11111100)) {
+            // Unregister and tap ESC to complete potential terminal escape sequence
+            unregister_code(KC_ESC);
+            tap_code(KC_ESC);
+
+            tap_code(KC_CAPS);
+            caps_enabled = false;
+
+            // ESC already unregistered
+            return PROCESS_STOP;
+        }
+    }
+
+    // Handle accent
+    if (is_accent(keycode)) {
+        if (record->event.pressed) {
+            accent = combine_accent(accent, get_accent(keycode));
+        }
+
+        // Dont process keycode used for accent
+        return PROCESS_STOP;
+    }
+
+    // Handle accented character
+    // Release event not handled, doesn't seem to result in any issue
     if ((accent != ACCENT_NONE) && record->event.pressed) {
         if (!is_accentable(keycode)) {
-            // Caps lock not caught as escape due to layer tap
-            if (is_letter(keycode) || (keycode == KC_ESC) || is_esc(&record->event.key)) {
+            if (is_accent_drop(GET_KC_KEY(keycode))) {
                 accent = ACCENT_NONE;
             }
 
@@ -383,6 +434,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 
         tap_accented_letter(keycode, accent);
         accent = ACCENT_NONE;
+
+        // Accented letter already tapped
         return PROCESS_STOP;
     }
 
