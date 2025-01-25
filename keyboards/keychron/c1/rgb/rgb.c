@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Process should stop (key processed)
 #define PROCESS_STOP false
 
+// Enable CAPS on double shift
+// Disabled as resulting in unexpected CAPS enabling
+#undef CAPS_DOUBLE_SHIFT
+
 typedef enum DipSwitchPos_e {
     MAC = 0,
     WIN = 1,
@@ -382,6 +386,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         return PROCESS_CONTINUE;
     }
 
+#ifdef CAPS_DOUBLE_SHIFT
     // Toggle CAPS on double shift
     // Restrict to (STD | EXT) layer to avoid unexpected CAPS after selection
     if (is_shift_on() && is_shift(&record->event.key) && !(layer_state & 0b11111100)) {
@@ -393,6 +398,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         // Avoid shift+del deleting whole line
         return PROCESS_STOP;
     }
+#endif
 
     // Disable CAPS on ESC
     // Check for ESC released in (STD | EXT) layer,
