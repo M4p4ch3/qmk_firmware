@@ -193,3 +193,11 @@ Sometimes results in "] " instead of expected "]"
 #define TRI_LAYER_LOWER_LAYER   L_SYM
 #define TRI_LAYER_UPPER_LAYER   L_NAV
 #define TRI_LAYER_ADJUST_LAYER  L_NUM
+
+// Accents
+//   Aigu
+#define KC_AACU QK_USER_0
+//   Grave
+#define KC_AGRV QK_USER_1
+//   Trema
+#define KC_ATRM QK_USER_2
