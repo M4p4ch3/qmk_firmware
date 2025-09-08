@@ -32,7 +32,7 @@
 #endif
 
 // #include "rgb.h"
-// #include "config.h"
+#include "config.h"
 #include "keycode.h"
 #include "keymap_french.h"
 
@@ -291,12 +291,14 @@ enum Accent {
     ACCENT_ACU,
     ACCENT_GRV,
     ACCENT_CIRC,
+    ACCENT_TRM, // Trema
 };
 
 static bool is_accent(uint16_t keycode) {
     switch (keycode) {
-    case FR_EACU:
-    case FR_EGRV:
+    case KC_AACU:
+    case KC_AGRV:
+    case KC_ATRM:
         return true;
         break;
     default:
@@ -342,13 +344,31 @@ static bool is_accent_drop(uint16_t keycode) {
     return false;
 }
 
-static bool is_accentable(uint16_t keycode) {
+static bool is_vowel(uint16_t keycode) {
     switch (keycode) {
     case FR_A:
     case KC_E:
     case KC_I:
     case KC_O:
     case KC_U:
+    case KC_Y:
+        return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
+static bool is_accentable(uint16_t keycode) {
+
+    if (is_vowel(keycode)) {
+        return true;
+    }
+
+    switch (keycode) {
+    case KC_C:
         return true;
         break;
     default:
@@ -361,11 +381,14 @@ static bool is_accentable(uint16_t keycode) {
 // Get accent from keycode
 static enum Accent get_accent(uint16_t keycode) {
     switch (keycode) {
-    case FR_EACU:
+    case KC_AACU:
         return ACCENT_ACU;
         break;
-    case FR_EGRV:
+    case KC_AGRV:
         return ACCENT_GRV;
+        break;
+    case KC_ATRM:
+        return ACCENT_TRM;
         break;
     default:
         break;
@@ -396,45 +419,62 @@ static enum Accent combine_accent(enum Accent current, enum Accent new) {
     return new;
 }
 
-static void tap_accented_letter(uint16_t keycode, enum Accent accent) {
-    bool tap = true;
+// return true if accented letter got tapped, false otherwise
+static bool tap_accented_letter(uint16_t keycode, enum Accent accent) {
+    // Did keycode got tapped
+    bool tapped = false;
 
     switch (accent) {
     case ACCENT_ACU:
         if (keycode == KC_E) {
             tap_code16(FR_EACU);
-        } else {
-            tap = false;
+            tapped = true;
         }
         break;
     case ACCENT_GRV:
         switch (keycode) {
         case FR_A:
             tap_code16(FR_AGRV);
+            tapped = true;
             break;
         case KC_E:
             tap_code16(FR_EGRV);
+            tapped = true;
             break;
         case KC_U:
             tap_code16(FR_UGRV);
+            tapped = true;
             break;
         default:
-            tap = false;
             break;
         }
         break;
     case ACCENT_CIRC:
-        tap_code16(FR_CIRC);
-        tap_code16(keycode);
+        if (is_vowel(keycode)) {
+            tap_code16(FR_CIRC);
+            tap_code16(keycode);
+            tapped = true;
+        }
+        break;
+    case ACCENT_TRM:
+    if (is_vowel(keycode)) {
+            tap_code16(FR_DIAE);
+            tap_code16(keycode);
+            tapped = true;
+        }
         break;
     default:
-        tap = false;
         break;
     }
 
-    if (!tap) {
-        tap_code16(keycode);
+    if (accent != ACCENT_NONE) {
+        if (keycode == KC_C) {
+            tap_code16(FR_CCED);
+            tapped = true;
+        }
     }
+
+    return tapped;
 }
 
 #define GET_KC_KEY(kc) (kc & 0xFF)
@@ -508,6 +548,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     // Handle accented character
     // Release event not handled, doesn't seem to result in any issue
     if ((accent != ACCENT_NONE) && record->event.pressed) {
+        bool tapped = false;
         if (!is_accentable(keycode)) {
             if (is_accent_drop(keycode)) {
                 accent = ACCENT_NONE;
@@ -516,7 +557,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             return PROCESS_CONTINUE;
         }
 
-        tap_accented_letter(keycode, accent);
+        tapped = tap_accented_letter(keycode, accent);
+        if (!tapped) {
+            // No accented letter tapped
+
+            // Tap keycode
+            tap_code16(keycode);
+        }
+
+        // Drop accent
         accent = ACCENT_NONE;
 
         // Accented letter already tapped
