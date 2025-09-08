@@ -36,6 +36,10 @@
 #include "keycode.h"
 #include "keymap_french.h"
 
+// Enable CAPS on double shift
+// Disabled as resulting in unexpected CAPS
+#undef CAPS_DOUBLE_SHIFT
+
 #define POWER_ON_LED_DURATION 3000
 
 #define HUE_ORANGE (10)
@@ -460,6 +464,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         return PROCESS_CONTINUE;
     }
 
+#ifdef CAPS_DOUBLE_SHIFT
     // Toggle CAPS on double shift
     // Restrict to (STD | EXT) layer to avoid unexpected CAPS after selection
     if (is_shift_on() && IS_MOD_SHIFT(GET_KC_MODS(keycode)) && !(layer_state & 0b11111100)) {
@@ -471,6 +476,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         // Avoid shift+del deleting whole line
         return PROCESS_STOP;
     }
+#endif
 
     // Disable CAPS on ESC
     // Check for ESC released in (STD | EXT) layer,
