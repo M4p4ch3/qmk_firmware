@@ -159,4 +159,12 @@ Sometimes results in "] " instead of expected "]"
 #define TRI_LAYER_UPPER_LAYER   L_NAV
 #define TRI_LAYER_ADJUST_LAYER  L_NUM
 
+// Accents
+//   Aigu
+#define KC_AACU KC_FN0
+//   Grave
+#define KC_AGRV KC_FN1
+//   Trema
+#define KC_ATRM KC_FN2
+
 #include "config_led.h"
