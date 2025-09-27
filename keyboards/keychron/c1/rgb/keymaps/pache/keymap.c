@@ -104,8 +104,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         {   _______,       KC_DCIR, FR_DLR,  FR_AT,   FR_QUOT, FR_GRV,  KC_AACU, FR_LABK, FR_RABK, FR_PERC, FR_BSLS, _______, K_RET(_______),         _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------|           |--------|
         // | LSHIFT            | W      | X      | C      | V      | B      | N      | ,?     | ;.     | :/     | !§     | RSHIFT                 |           | UP     |
-        {   K_LS(MO(L_SYM_SFT)),
-                                FR_LABK, FR_HASH, FR_TILD, FR_AMPR, FR_RABK, FR_UNDS, FR_UNDS, KC_NO,   KC_NO,   KC_NO,   K_RS(MO(L_SYM_SFT)),        _______, _______, _______ },
+        {   K_LS(LM(L_SYM_SFT, MOD_LSFT)),
+                                FR_LABK, FR_HASH, FR_TILD, FR_AMPR, FR_RABK, FR_UNDS, FR_UNDS, KC_NO,   KC_NO,   KC_NO,   K_RS(LM(L_SYM_SFT, MOD_RSFT)),
+                                                                                                                                                      _______, _______, _______ },
         // |--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
         // | LCTRL    | LCMD     | LALT     | SPACE                                                   | RALT     | RCMD     | FN       | RCTRL    |  | LFT    | DWN    | RGT    |
         {   _______,   _______,   _______,   K_SPC(_______),                                           _______,   _______,   _______,   _______,      _______, _______, _______ },

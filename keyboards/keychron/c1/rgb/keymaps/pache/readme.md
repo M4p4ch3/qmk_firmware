@@ -18,8 +18,22 @@ qmk setup
 
 In `qmk_firmware/` :
 
+Switch to venv :
+
 ```sh
-qmk compile -kb keychron/c1/rgb -km pache
+source ./venv_qmk/bin/activate
+```
+
+Compile using `qmk` :
+
+```sh
+(venv_qmk) qmk compile -kb keychron/c1/rgb -km pache
+```
+
+Or `make` :
+
+```sh
+(venv_qmk) make keychron/c1/rgb:pache
 ```
 
 # Flashing

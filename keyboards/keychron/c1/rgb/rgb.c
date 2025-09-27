@@ -141,26 +141,28 @@ static bool is_shift_on(void) {
     return (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 }
 
-static void unregister_shift(void) {
-    del_weak_mods(MOD_MASK_SHIFT);
-    del_oneshot_mods(MOD_MASK_SHIFT);
-    unregister_mods(MOD_MASK_SHIFT);
-}
+// static void unregister_shift(void) {
+//     del_weak_mods(MOD_MASK_SHIFT);
+//     del_oneshot_mods(MOD_MASK_SHIFT);
+//     unregister_mods(MOD_MASK_SHIFT);
+// }
 
 // Callback for layer function
 layer_state_t layer_state_set_kb(layer_state_t state) {
     static layer_state_t state_prev = 0U;
 
     // Handle L_SYM_SFT
-    //   Enable L_SYM_SFT when shift is pressed while enabling L_SYM
-    if (is_layer_entered(state_prev, state, L_SYM)) {
-        if (is_shift_on()) {
-            unregister_shift();
-            state = set_layer_on(state, L_SYM_SFT);
-        }
-    }
-    //   Disable L_SYM_SFT whle disbabling L_SYM
-    else if (is_layer_exited(state_prev, state, L_SYM)) {
+    if (is_layer_entered(state_prev, state, L_SYM) && is_shift_on()) {
+        // L_SYM entered whil shift is pressed
+
+        // TODO remove
+        // unregister_shift();
+        // Enable L_SYM_SFT
+        state = set_layer_on(state, L_SYM_SFT);
+    } else if (is_layer_exited(state_prev, state, L_SYM)) {
+        // L_SYM exited
+
+        // Disable L_SYM_SFT anyway
         state = set_layer_off(state, L_SYM_SFT);
     }
 
@@ -492,6 +494,22 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         accent = ACCENT_NONE;
 
         // Accented letter already tapped
+        return PROCESS_STOP;
+    }
+
+    // Handle L_SYM_SFT
+    if (record->event.pressed && is_layer_on(layer_state, L_SYM_SFT)) {
+        // Key pressed while L_SYM_SFT is enabled
+
+        // Unregister shift and tap keycode
+        // Restore shift afterwards
+        uint8_t mods = get_mods();
+        del_weak_mods(MOD_MASK_SHIFT);
+        del_oneshot_mods(MOD_MASK_SHIFT);
+        unregister_mods(MOD_MASK_SHIFT);
+        register_code16(keycode);
+        set_mods(mods);
+
         return PROCESS_STOP;
     }
 
