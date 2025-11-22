@@ -64,18 +64,23 @@ void dip_switch_update_user(uint8_t index, bool state) {
         return;
     }
 
+    // Reset to STD layer
+    layer_move(L_STD);
+
     if (state) {
         // Mac position
         dip_switch_pos = MAC;
         rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
         rgb_matrix_sethsv_noeeprom(HSV_WHITE);
-        layer_move(L_STD);
+        // Stay in STD layer
     } else {
         // Windows position
         dip_switch_pos = WIN;
         rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR_LAYER);
         rgb_matrix_sethsv_noeeprom(HUE_ORANGE, 0xFF, 0xFF);
-        layer_move(L_EXT);
+        // Enable EXT and MSK layers
+        layer_on(L_EXT);
+        layer_on(L_MSK);
     }
 
     // Update mode LEDs
@@ -431,7 +436,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 #ifdef CAPS_DOUBLE_SHIFT
     // Toggle CAPS on double shift
     // Restrict to (STD | EXT) layer to avoid unexpected CAPS after selection
-    if (is_shift_on() && is_shift(&record->event.key) && !(layer_state & 0b11111100)) {
+    if (is_shift_on() && is_shift(&record->event.key) && !(layer_state & 0b111111000)) {
         if (record->event.pressed) {
             tap_code(KC_CAPS);
             caps_enabled = !caps_enabled;
@@ -446,7 +451,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     // Check for ESC released in (STD | EXT) layer,
     // To ensure ESC is tapped, and not used to change layer
     if (caps_enabled && (GET_KC_KEY(keycode) == KC_ESC)) {
-        if (!record->event.pressed && !(layer_state & 0b11111100)) {
+        if (!record->event.pressed && !(layer_state & 0b111111000)) {
             // Unregister and tap ESC to complete potential terminal escape sequence
             unregister_code(KC_ESC);
             tap_code(KC_ESC);

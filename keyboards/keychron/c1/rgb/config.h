@@ -126,11 +126,12 @@ Sometimes results in "] " instead of expected "]"
 #define LAYER_COLOR_DFLT COLOR_WHITE
 #define LAYER_COLOR_0 COLOR_ORANGE
 #define LAYER_COLOR_1 COLOR_YELLOW
-#define LAYER_COLOR_2 COLOR_TEAL
-#define LAYER_COLOR_3 COLOR_BLUE
-#define LAYER_COLOR_4 COLOR_GREEN
-#define LAYER_COLOR_5 COLOR_MAGENTA
-#define LAYER_COLOR_6 COLOR_RED
+#define LAYER_COLOR_2 COLOR_BLACK
+#define LAYER_COLOR_3 COLOR_TEAL
+#define LAYER_COLOR_4 COLOR_BLUE
+#define LAYER_COLOR_5 COLOR_GREEN
+#define LAYER_COLOR_6 COLOR_MAGENTA
+#define LAYER_COLOR_7 COLOR_RED
 
 // Layer ID
 //   Standard
@@ -143,17 +144,20 @@ Sometimes results in "] " instead of expected "]"
 //   Startup layer for Windows dip switch position
 //   Allows access to upper layers
 #define L_EXT       1
+//   Mask unused keys
+//   To get closer to 40/100 layout
+#define L_MSK       2
 //   Symbols
-#define L_SYM       2
+#define L_SYM       3
 //   Shifted symbols
-#define L_SYM_SFT   3
+#define L_SYM_SFT   4
 //   Navigation
-#define L_NAV       4
+#define L_NAV       5
 //   Numpad
 //   Accessed via tri layer (L_SYM, L_NAV)
-#define L_NUM       5
+#define L_NUM       6
 //   Function
-#define L_FNCT      6
+#define L_FNCT      7
 
 #define TRI_LAYER_LOWER_LAYER   L_SYM
 #define TRI_LAYER_UPPER_LAYER   L_NAV
