@@ -21,6 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keymap_french.h"
 #include "quantum_keycodes.h"
 
+#ifndef NO_DEBUG
+#include "print.h"
+#define DEBUG_ON
+#endif
+
 #define HUE_ORANGE (14)
 
 // Process should continue (key not processed)
@@ -91,6 +96,13 @@ void keyboard_pre_init_user(void) {
     // Setup Win & Mac LED Pins as output
     setPinOutput(LED_WIN_PIN);
     setPinOutput(LED_MAC_PIN);
+}
+
+void keyboard_post_init_user(void) {
+    // Enabled at runtime via DEBUG keycode
+    debug_enable = false;
+    // debug_matrix = true;
+    // debug_keyboard = true;
 }
 
 void suspend_power_down_user(void) {
@@ -220,6 +232,16 @@ enum Accent {
     ACCENT_TRM, // Trema
 };
 
+#ifdef DEBUG_ON
+static const char * ACCENT_STR[] = {
+    "NONE",
+    "ACU",
+    "GRV",
+    "CIRC",
+    "TRM",
+};
+#endif
+
 static bool is_accent(uint16_t keycode) {
     switch (keycode) {
     case KC_AACU:
@@ -236,6 +258,8 @@ static bool is_accent(uint16_t keycode) {
 
 static bool is_accent_drop(uint16_t keycode) {
     bool ret = false;
+
+    dprintf("%s(keycode == 0x%04X)\n", __func__, keycode);
 
     if ((keycode >= KC_A) && (keycode <= KC_Z)) {
         ret = true;
@@ -269,6 +293,7 @@ static bool is_accent_drop(uint16_t keycode) {
         break;
     }
 
+    dprintf("%s() return %u\n", __func__, ret);
     return ret;
 }
 
@@ -329,6 +354,7 @@ static enum Accent get_accent(uint16_t keycode) {
 static enum Accent combine_accent(enum Accent current, enum Accent new) {
     enum Accent ret = new;
 
+    dprintf("%s(current == %s, new == %s)\n", __func__, ACCENT_STR[current], ACCENT_STR[new]);
 
     if ((current == ACCENT_ACU && new == ACCENT_GRV) ||
         (current == ACCENT_GRV && new == ACCENT_ACU)) {
@@ -336,6 +362,7 @@ static enum Accent combine_accent(enum Accent current, enum Accent new) {
         ret = ACCENT_CIRC;
     }
 
+    dprintf("%s() return %s\n", __func__, ACCENT_STR[ret]);
     return ret;
 }
 
@@ -343,6 +370,8 @@ static enum Accent combine_accent(enum Accent current, enum Accent new) {
 static bool tap_accented_letter(uint16_t keycode, enum Accent accent) {
     // Did keycode got tapped
     bool tapped = false;
+
+    dprintf("%s(keycode == 0x%04X, accent == %s)\n", __func__, keycode, ACCENT_STR[accent]);
 
     switch (accent) {
     case ACCENT_ACU:
@@ -394,6 +423,7 @@ static bool tap_accented_letter(uint16_t keycode, enum Accent accent) {
         }
     }
 
+    dprintf("%s() tapped == %u\n", __func__, tapped);
     return tapped;
 }
 
@@ -406,11 +436,20 @@ static bool tap_accented_letter(uint16_t keycode, enum Accent accent) {
 // Handles MOD_RSFT as well
 #define IS_MOD_SHIFT(mod) (mod & MOD_LSFT)
 
+#ifdef DEBUG_ON
+static const char * PROCESS_STR[] = {
+    "PROCESS_CONTINUE",
+    "PROCESS_STOP",
+};
+#endif
+
 // Callback for keycode record
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     bool ret = PROCESS_CONTINUE;
     static bool caps_enabled = false;
     static enum Accent accent = ACCENT_NONE;
+
+    dprintf("%s(keycode == 0x%04X)\n", __func__, keycode);
 
     // Disable L_SYM_SFT when shift is released
     // Only relevant if L_SYM_SFT entered via custom process in layer_state_set_kb
@@ -465,6 +504,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     if (is_accent(keycode)) {
         if (record->event.pressed) {
             accent = combine_accent(accent, get_accent(keycode));
+            dprintf("%s() accent == %s\n", __func__, ACCENT_STR[accent]);
         }
 
         // Dont process keycode used for accent
@@ -480,6 +520,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         if (!is_accentable(keycode)) {
             if (is_accent_drop(keycode)) {
                 accent = ACCENT_NONE;
+                dprintf("%s() accent dropped\n", __func__);
             }
 
             goto end;
@@ -490,11 +531,13 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
             // No accented letter tapped
 
             // Tap keycode
+            dprintf("%s() tap_code16(kecode == 0x%04X)\n", __func__, keycode);
             tap_code16(keycode);
         }
 
         // Drop accent
         accent = ACCENT_NONE;
+        dprintf("%s() accent dropped\n", __func__);
 
         // Accented letter already tapped
         ret = PROCESS_STOP;
@@ -519,5 +562,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     }
 
 end:
+    dprintf("%s() return %s\n\n", __func__, PROCESS_STR[(uint8_t) ret]);
     return ret;
 }
