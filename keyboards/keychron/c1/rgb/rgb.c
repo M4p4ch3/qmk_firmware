@@ -472,7 +472,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         bool tapped = false;
 
         if (!is_accentable(keycode)) {
-            if (is_accent_drop(GET_KC_KEY(keycode))) {
+            if (is_accent_drop(keycode)) {
                 accent = ACCENT_NONE;
             }
 
