@@ -82,3 +82,8 @@ user_song_list.h
 
 **/.cache
 **/._cache
+
+# VSCode WS
+**/*.code-workspace
+# clangd compilation DB
+compile_commands.json
