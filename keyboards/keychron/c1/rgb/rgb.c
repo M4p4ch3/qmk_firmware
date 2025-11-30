@@ -235,16 +235,18 @@ static bool is_accent(uint16_t keycode) {
 }
 
 static bool is_accent_drop(uint16_t keycode) {
+    bool ret = false;
+
     if ((keycode >= KC_A) && (keycode <= KC_Z)) {
-        return true;
+        ret = true;
     }
 
     if ((keycode >= KC_1) && (keycode <= KC_0)) {
-        return true;
+        ret = true;
     }
 
     if ((keycode >= KC_F1) && (keycode <= KC_F12)) {
-        return true;
+        ret = true;
     }
 
     switch (keycode) {
@@ -262,12 +264,12 @@ static bool is_accent_drop(uint16_t keycode) {
     case KC_PGUP:
     case KC_PGDN:
     case KC_DEL:
-        return true;
+        ret = true;
     default:
         break;
     }
 
-    return false;
+    return ret;
 }
 
 static bool is_vowel(uint16_t keycode) {
