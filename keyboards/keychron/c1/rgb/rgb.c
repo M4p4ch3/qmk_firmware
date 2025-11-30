@@ -325,24 +325,16 @@ static enum Accent get_accent(uint16_t keycode) {
 
 // Combine current accent with new one
 static enum Accent combine_accent(enum Accent current, enum Accent new) {
-    switch (current) {
-    case ACCENT_ACU:
-        if (new == ACCENT_GRV) {
-            return ACCENT_CIRC;
-        }
+    enum Accent ret = new;
 
-        break;
-    case ACCENT_GRV:
-        if (new == ACCENT_ACU) {
-            return ACCENT_CIRC;
-        }
 
-        break;
-    default:
-        break;
+    if ((current == ACCENT_ACU && new == ACCENT_GRV) ||
+        (current == ACCENT_GRV && new == ACCENT_ACU)) {
+
+        ret = ACCENT_CIRC;
     }
 
-    return new;
+    return ret;
 }
 
 // return true if accented letter got tapped, false otherwise
