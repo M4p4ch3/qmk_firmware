@@ -408,6 +408,7 @@ static bool tap_accented_letter(uint16_t keycode, enum Accent accent) {
 
 // Callback for keycode record
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
+    bool ret = PROCESS_CONTINUE;
     static bool caps_enabled = false;
     static enum Accent accent = ACCENT_NONE;
 
@@ -418,13 +419,13 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     //   Cant't rely on keycode, as shift is part of several other keys
     if (!record->event.pressed && is_shift(&record->event.key)) {
         layer_off(L_SYM_SFT);
-        return PROCESS_CONTINUE;
+        goto end;
     }
 
     // Maintain CAPS state consistent
     if ((GET_KC_KEY(keycode) == KC_CAPS) && record->event.pressed) {
         caps_enabled = !caps_enabled;
-        return PROCESS_CONTINUE;
+        goto end;
     }
 
 #ifdef CAPS_DOUBLE_SHIFT
@@ -437,7 +438,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         }
 
         // Avoid shift+del deleting whole line
-        return PROCESS_STOP;
+        ret = PROCESS_STOP;
+        goto end;
     }
 #endif
 
@@ -454,7 +456,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
             caps_enabled = false;
 
             // ESC already unregistered
-            return PROCESS_STOP;
+            ret = PROCESS_STOP;
+            goto end;
         }
     }
 
@@ -465,7 +468,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         }
 
         // Dont process keycode used for accent
-        return PROCESS_STOP;
+        ret = PROCESS_STOP;
+        goto end;
     }
 
     // Handle accented character
@@ -478,7 +482,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
                 accent = ACCENT_NONE;
             }
 
-            return PROCESS_CONTINUE;
+            goto end;
         }
 
         tapped = tap_accented_letter(keycode, accent);
@@ -493,7 +497,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         accent = ACCENT_NONE;
 
         // Accented letter already tapped
-        return PROCESS_STOP;
+        ret = PROCESS_STOP;
+        goto end;
     }
 
     // Handle L_SYM_SFT
@@ -509,8 +514,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         register_code16(keycode);
         set_mods(mods);
 
-        return PROCESS_STOP;
+        ret = PROCESS_STOP;
+        goto end;
     }
 
-    return PROCESS_CONTINUE;
+end:
+    return ret;
 }
