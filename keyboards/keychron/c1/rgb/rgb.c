@@ -244,9 +244,9 @@ static const char * ACCENT_STR[] = {
 
 static bool is_accent(uint16_t keycode) {
     switch (keycode) {
-    case KC_AACU:
-    case KC_AGRV:
-    case KC_ATRM:
+    case M_AACU:
+    case M_AGRV:
+    case M_ATRM:
         return true;
         break;
     default:
@@ -334,13 +334,13 @@ static bool is_accentable(uint16_t keycode) {
 // Get accent from keycode
 static enum Accent get_accent(uint16_t keycode) {
     switch (keycode) {
-    case KC_AACU:
+    case M_AACU:
         return ACCENT_ACU;
         break;
-    case KC_AGRV:
+    case M_AGRV:
         return ACCENT_GRV;
         break;
-    case KC_ATRM:
+    case M_ATRM:
         return ACCENT_TRM;
         break;
     default:
@@ -500,14 +500,23 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         }
     }
 
-    // Handle accent
-    if (is_accent(keycode)) {
-        if (record->event.pressed) {
+    // Handle macros
+    if ((keycode >= M_START) && (keycode <= M_END)) {
+        // Handle accent
+        if (is_accent(keycode) && record->event.pressed) {
             accent = combine_accent(accent, get_accent(keycode));
             dprintf("%s() accent == %s\n", __func__, ACCENT_STR[accent]);
         }
+        // Handle direct grave
+        else if ((keycode == M_DGRV) && record->event.pressed) {
+            // Direct grave macro is in shifted symbols layer
+            uint8_t mods = unregister_shift();
+            tap_code16(FR_GRV);
+            tap_code16(FR_GRV);
+            tap_code16(KC_BSPC);
+            set_mods(mods);
+        }
 
-        // Dont process keycode used for accent
         ret = PROCESS_STOP;
         goto end;
     }
