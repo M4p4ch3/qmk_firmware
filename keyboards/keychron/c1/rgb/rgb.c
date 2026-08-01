@@ -158,11 +158,19 @@ static bool is_shift_on(void) {
     return (get_mods() | get_weak_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 }
 
-// static void unregister_shift(void) {
-//     del_weak_mods(MOD_MASK_SHIFT);
-//     del_oneshot_mods(MOD_MASK_SHIFT);
-//     unregister_mods(MOD_MASK_SHIFT);
-// }
+/**
+ * @brief Unregister shift mod
+ * @return uint8_t Initial mods
+ */
+static uint8_t unregister_shift(void) {
+    uint8_t mods = get_mods();
+
+    del_weak_mods(MOD_MASK_SHIFT);
+    del_oneshot_mods(MOD_MASK_SHIFT);
+    unregister_mods(MOD_MASK_SHIFT);
+
+    return mods;
+}
 
 // Callback for layer function
 layer_state_t layer_state_set_kb(layer_state_t state) {
@@ -557,14 +565,23 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     if (record->event.pressed && is_layer_on(layer_state, L_SYM_SFT)) {
         // Key pressed while L_SYM_SFT is enabled
 
-        // Unregister shift and tap keycode
-        // Restore shift afterwards
-        uint8_t mods = get_mods();
-        del_weak_mods(MOD_MASK_SHIFT);
-        del_oneshot_mods(MOD_MASK_SHIFT);
-        unregister_mods(MOD_MASK_SHIFT);
+        // Register keycode while disabling shift
+        uint8_t mods = unregister_shift();
         register_code16(keycode);
         set_mods(mods);
+
+        ret = PROCESS_STOP;
+        goto end;
+    }
+
+    // Handle underscore while caps is on
+    if ((keycode == FR_UNDS) && caps_enabled) {
+        if (record->event.pressed) {
+            // Tap keycode while disabling shift
+            uint8_t mods = unregister_shift();
+            tap_code16(FR_UNDS);
+            set_mods(mods);
+        }
 
         ret = PROCESS_STOP;
         goto end;
