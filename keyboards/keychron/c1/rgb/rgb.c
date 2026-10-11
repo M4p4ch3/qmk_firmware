@@ -37,6 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Disabled as resulting in unexpected CAPS enabling
 #undef CAPS_DOUBLE_SHIFT
 
+// Handle CAPS by holding shift
+// To avoid messing up with laptop CAPS state
+#define CAPS_HOLD_SHIFT
+
 typedef enum DipSwitchPos_e {
     MAC = 0,
     WIN = 1,
@@ -469,9 +473,15 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         goto end;
     }
 
-    // Maintain CAPS state consistent
     if ((GET_KC_KEY(keycode) == KC_CAPS) && record->event.pressed) {
+        // Maintain CAPS state consistent
         caps_enabled = !caps_enabled;
+
+#ifdef CAPS_HOLD_SHIFT
+        caps_enabled ? register_mods(MOD_MASK_SHIFT) : unregister_shift();
+        ret = PROCESS_STOP;
+#endif
+
         goto end;
     }
 
@@ -499,7 +509,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
             unregister_code(KC_ESC);
             tap_code(KC_ESC);
 
+#ifdef CAPS_HOLD_SHIFT
+            unregister_shift();
+#else
             tap_code(KC_CAPS);
+#endif
             caps_enabled = false;
 
             // ESC already unregistered
@@ -574,18 +588,18 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         goto end;
     }
 
-    // Handle underscore while caps is on
-    if ((keycode == FR_UNDS) && caps_enabled) {
-        if (record->event.pressed) {
-            // Tap keycode while disabling shift
-            uint8_t mods = unregister_shift();
-            tap_code16(FR_UNDS);
-            set_mods(mods);
-        }
+    // // Handle underscore while caps is on
+    // if ((keycode == FR_UNDS) && caps_enabled) {
+    //     if (record->event.pressed) {
+    //         // Tap keycode while disabling shift
+    //         uint8_t mods = unregister_shift();
+    //         tap_code16(FR_UNDS);
+    //         set_mods(mods);
+    //     }
 
-        ret = PROCESS_STOP;
-        goto end;
-    }
+    //     ret = PROCESS_STOP;
+    //     goto end;
+    // }
 
 end:
     dprintf("%s() return %s\n\n", __func__, PROCESS_STR[(uint8_t) ret]);
