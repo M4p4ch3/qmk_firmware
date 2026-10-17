@@ -41,7 +41,7 @@
 #define DIP_SWITCH_PINS     { D4 }
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCE            5
+#define DEBOUNCE            12
 
 /* LED Status indicators */
 #define LED_CAPS_LOCK_PIN   B10
@@ -83,7 +83,14 @@
 // Holding and releasing a dual-function key without pressing another key
 // will send the original keycode even if it is outside the tapping term.
 // https://docs.qmk.fm/#/tap_hold?id=retro-tapping
-#define RETRO_TAPPING
+// Disable as causing issue with shofted custom keys
+/*
+| space         |
+    | shift             |
+        | e ([])    |
+Sometimes results in "] " instead of expected "]"
+*/
+// #define RETRO_TAPPING
 
 // Pressing a dual-role key, tapping another key (press and release) and then releasing the dual-role key, all within the tapping term,
 // Will result in the dual-role key to perform its hold action, instead of its tap action by default
@@ -103,23 +110,71 @@
 #define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
 
-#define COLOR_BLACK     0x00, 0x00, 0x00
-#define COLOR_WHITE     0xFF, 0xFF, 0xFF
-#define COLOR_RED       0xFF, 0x00, 0x00
-#define COLOR_GREEN     0x00, 0xFF, 0x00
-#define COLOR_BLUE      0x00, 0x00, 0xFF
-#define COLOR_ORANGE    0xFF, 0x30, 0x00
-#define COLOR_YELLOW    0xFF, 0xFF, 0x00
-#define COLOR_TEAL      0x00, 0xFF, 0xFF
-#define COLOR_MAGENTA   0xFF, 0x00, 0xFF
+// 0xRRGGBB
+// 0x<r:2><g:2><b:2>
+#define COLOR_BLACK     0x000000
+#define COLOR_WHITE     0xFFFFFF
+#define COLOR_RED       0xFF0000
+#define COLOR_GREEN     0x00FF00
+#define COLOR_BLUE      0x0000FF
+#define COLOR_ORANGE    0xFF3000
+#define COLOR_YELLOW    0xFFFF00
+#define COLOR_TEAL      0x00FFFF
+#define COLOR_MAGENTA   0xFF00FF
 
 #define LAYER_COLOR_OFF COLOR_BLACK
 #define LAYER_COLOR_DFLT COLOR_WHITE
 #define LAYER_COLOR_0 COLOR_ORANGE
 #define LAYER_COLOR_1 COLOR_YELLOW
-#define LAYER_COLOR_2 COLOR_TEAL
-#define LAYER_COLOR_3 COLOR_GREEN
-#define LAYER_COLOR_4 COLOR_MAGENTA
-#define LAYER_COLOR_5 COLOR_BLUE
+#define LAYER_COLOR_2 COLOR_BLACK
+#define LAYER_COLOR_3 COLOR_TEAL
+#define LAYER_COLOR_4 COLOR_BLUE
+#define LAYER_COLOR_5 COLOR_GREEN
+#define LAYER_COLOR_6 COLOR_MAGENTA
+#define LAYER_COLOR_7 COLOR_RED
+
+// Layer ID
+//   Standard
+//   Startup layer for Mac dip switch position
+//   Doesn't allow access to upder layers
+//   Features as few changes as possible from default keymap :
+//   - ^2 updated to <> as missing in azerty keymap on ANSI layout
+#define L_STD       0
+//   Extension from standard
+//   Startup layer for Windows dip switch position
+//   Allows access to upper layers
+#define L_EXT       1
+//   Mask unused keys
+//   To get closer to 40/100 layout
+#define L_MSK       2
+//   Symbols
+#define L_SYM       3
+//   Shifted symbols
+#define L_SYM_SFT   4
+//   Navigation
+#define L_NAV       5
+//   Numpad
+//   Accessed via tri layer (L_SYM, L_NAV)
+#define L_NUM       6
+//   Function
+#define L_FNCT      7
+
+#define TRI_LAYER_LOWER_LAYER   L_SYM
+#define TRI_LAYER_UPPER_LAYER   L_NAV
+#define TRI_LAYER_ADJUST_LAYER  L_NUM
+
+// Macros
+#define M_START KC_FN0
+#define M_END   KC_FN10
+//   Accents
+//     Aigu
+#define M_AACU  KC_FN0
+//     Grave
+#define M_AGRV  KC_FN1
+//     Trema
+#define M_ATRM  KC_FN2
+//   Direct grave
+#define M_DGRV  KC_FN10
+
 
 #include "config_led.h"
