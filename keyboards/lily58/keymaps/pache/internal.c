@@ -48,6 +48,8 @@ void keyboard_post_init_user(void) {
     // rgblight_set_effect_range(uint8_t start_pos, uint8_t num_leds);
 
     layer_on(L_EXT);
+
+    rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR_LAYER);
 }
 
 void suspend_power_down_user(void) {

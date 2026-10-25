@@ -29,22 +29,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ERA Debug action
 #define ACTION_DEBUG
 
-// #undef RGBLED_NUM
-#define RGBLIGHT_EFFECT_BREATHING
-#define RGBLIGHT_EFFECT_RAINBOW_MOOD
-#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-#define RGBLIGHT_EFFECT_SNAKE
-#define RGBLIGHT_EFFECT_KNIGHT
-#define RGBLIGHT_EFFECT_CHRISTMAS
-#define RGBLIGHT_EFFECT_STATIC_GRADIENT
-#define RGBLIGHT_EFFECT_RGB_TEST
-#define RGBLIGHT_EFFECT_ALTERNATING
-#define RGBLIGHT_EFFECT_TWINKLE
-// #define RGBLED_NUM 27
-// #define RGBLIGHT_LIMIT_VAL 120
-#define RGBLIGHT_HUE_STEP 10
-#define RGBLIGHT_SAT_STEP 17
-#define RGBLIGHT_VAL_STEP 17
+// // #undef RGBLED_NUM
+// #define RGBLIGHT_EFFECT_BREATHING
+// #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+// #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+// #define RGBLIGHT_EFFECT_SNAKE
+// #define RGBLIGHT_EFFECT_KNIGHT
+// #define RGBLIGHT_EFFECT_CHRISTMAS
+// #define RGBLIGHT_EFFECT_STATIC_GRADIENT
+// #define RGBLIGHT_EFFECT_RGB_TEST
+// #define RGBLIGHT_EFFECT_ALTERNATING
+// #define RGBLIGHT_EFFECT_TWINKLE
+// // #define RGBLED_NUM 27
+// // #define RGBLIGHT_LIMIT_VAL 120
+// #define RGBLIGHT_HUE_STEP 10
+// #define RGBLIGHT_SAT_STEP 17
+// #define RGBLIGHT_VAL_STEP 17
 
 // // Underglow
 // //*
@@ -52,6 +52,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define RGBLED_NUM 14    // Number of LEDs
 // #define RGBLIGHT_SLEEP
 // //*/
+
+// #define RGBLIGHT_LAYERS
+// #define RGBLIGHT_LAYERS_AUTO
 
 // Determines what is a tap and what is a hold
 // https://docs.qmk.fm/#/tap_hold?id=tapping-term
@@ -94,16 +97,18 @@ Sometimes results in "] " instead of expected "]"
 // #define PERMISSIVE_HOLD
 
 // // RGB matrix default startup settings
-// #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR_LAYER
 // //   HSV : white
-// #define RGB_MATRIX_STARTUP_HUE 0
-// #define RGB_MATRIX_STARTUP_SAT 0
-// #define RGB_MATRIX_STARTUP_VAL 255
-// #define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
+#define RGB_MATRIX_STARTUP_HUE 0
+#define RGB_MATRIX_STARTUP_SAT 0
+#define RGB_MATRIX_STARTUP_VAL 255
+#define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
 
-// #define DISABLE_RGB_MATRIX_BREATHING
-// #define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
-// #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
+#define DISABLE_RGB_MATRIX_BREATHING
+#define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
+#define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
+#define ENABLE_RGB_MATRIX_PIXEL_RAIN
+#define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
 
 // 0xRRGGBB
 // 0x<r:2><g:2><b:2>
