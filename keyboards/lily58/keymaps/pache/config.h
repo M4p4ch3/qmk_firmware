@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define EE_HANDS
 
 // ERA Debug action
-#define ACTION_DEBUG
+// #define ACTION_DEBUG
 
 // // #undef RGBLED_NUM
 // #define RGBLIGHT_EFFECT_BREATHING
@@ -96,31 +96,40 @@ Sometimes results in "] " instead of expected "]"
 // Seems to be the actual behaviour even without defining
 // #define PERMISSIVE_HOLD
 
+// #define MATRIX_ROWS 14
+// #define MATRIX_COLS 5
+
 // // RGB matrix default startup settings
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR_LAYER
+#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_STARTUP_MODE
 // //   HSV : white
-#define RGB_MATRIX_STARTUP_HUE 0
+#define RGB_MATRIX_STARTUP_HUE 127
 #define RGB_MATRIX_STARTUP_SAT 0
-#define RGB_MATRIX_STARTUP_VAL 255
+#define RGB_MATRIX_STARTUP_VAL 127
 #define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
+// ERA TODO
+// Disable optimisation
+#define RGB_MATRIX_LED_PROCESS_LIMIT 0
 
 #define DISABLE_RGB_MATRIX_BREATHING
 #define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
 #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
-#define ENABLE_RGB_MATRIX_PIXEL_RAIN
+#define DISABLE_RGB_MATRIX_PIXEL_RAIN
+#define DISABLE_RGB_MATRIX_SOLID_COLOR
 #define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
 
+// ERA TODO move to HSV ? To be able to change brightness at runtime, from keymap
 // 0xRRGGBB
 // 0x<r:2><g:2><b:2>
 #define COLOR_BLACK     0x000000
-#define COLOR_WHITE     0xFFFFFF
-#define COLOR_RED       0xFF0000
-#define COLOR_GREEN     0x00FF00
-#define COLOR_BLUE      0x0000FF
-#define COLOR_ORANGE    0xFF3000
-#define COLOR_YELLOW    0xFFFF00
-#define COLOR_TEAL      0x00FFFF
-#define COLOR_MAGENTA   0xFF00FF
+#define COLOR_WHITE     0x505050
+#define COLOR_RED       0x500000
+#define COLOR_GREEN     0x005000
+#define COLOR_BLUE      0x000050
+#define COLOR_ORANGE    0x501000
+#define COLOR_YELLOW    0x505000
+#define COLOR_TEAL      0x005050
+#define COLOR_MAGENTA   0x500050
 
 #define LAYER_COLOR_OFF COLOR_BLACK
 #define LAYER_COLOR_DFLT COLOR_WHITE

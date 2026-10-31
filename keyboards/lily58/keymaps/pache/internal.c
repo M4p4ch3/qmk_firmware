@@ -44,9 +44,10 @@ void keyboard_post_init_user(void) {
     // Enabled at runtime via DEBUG keycode
     debug_enable = true;
     // debug_matrix = true;
-    debug_keyboard = true;
+    // debug_keyboard = true;
     // rgblight_set_effect_range(uint8_t start_pos, uint8_t num_leds);
 
+    layer_move(L_STD);
     layer_on(L_EXT);
 
     rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR_LAYER);
