@@ -183,7 +183,13 @@ Sometimes results in "] " instead of expected "]"
 //     Trema
 #define M_ATRM  QK_MACRO_2
 //   Direct grave
-#define M_DGRV  QK_MACRO_10
+#define M_DGRV  QK_MACRO_3
+//   Debug
+//     Internal
+#define M_DB_INT    QK_MACRO_4
+//     RBG Matrix
+#define M_DB_RGB    QK_MACRO_5
+
 
 
 // #include "config_led.h"

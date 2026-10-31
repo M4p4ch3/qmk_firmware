@@ -10,13 +10,13 @@ enum Accent {
     ACCENT_TRM, // Trema
 };
 
-// const char * ACCENT_STR[] = {
-//     "NONE",
-//     "ACU",
-//     "GRV",
-//     "CIRC",
-//     "TRM",
-// };
+const char * ACCENT_STR[] = {
+    "NONE",
+    "ACU",
+    "GRV",
+    "CIRC",
+    "TRM",
+};
 
 bool is_accent(uint16_t keycode);
 bool is_accent_drop(uint16_t keycode);
