@@ -7,6 +7,7 @@ CompileFlags:
             -Wno-pointer-to-int-cast,
             -Wno-int-to-void-pointer-cast,
             -DPROGMEM=,
+            -DRGB_MATRIX_CUSTOM_EFFECT_IMPLS,
         ]
     Remove:
         [
