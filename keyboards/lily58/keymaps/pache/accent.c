@@ -11,6 +11,16 @@ static const char * ACCENT_STR[] = {
     "TRM",
 };
 
+const char * ACCENT_get_str(enum Accent accent)
+{
+    if (accent >= ACCENT_LAST)
+    {
+        return "";
+    }
+
+    return ACCENT_STR[accent];
+}
+
 bool is_accent(uint16_t keycode) {
     switch (keycode) {
     case M_AACU:

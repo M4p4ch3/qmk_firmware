@@ -104,6 +104,7 @@ Sometimes results in "] " instead of expected "]"
 // // RGB matrix default startup settings
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR_LAYER
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_STARTUP_MODE
+#define RGB_MATRIX_DEFAULT_ON true
 // //   HSV : white
 #define RGB_MATRIX_STARTUP_HUE 127
 #define RGB_MATRIX_STARTUP_SAT 0
@@ -137,12 +138,11 @@ Sometimes results in "] " instead of expected "]"
 #define LAYER_COLOR_DFLT COLOR_WHITE
 #define LAYER_COLOR_0 COLOR_ORANGE
 #define LAYER_COLOR_1 COLOR_YELLOW
-#define LAYER_COLOR_2 COLOR_BLACK
-#define LAYER_COLOR_3 COLOR_TEAL
-#define LAYER_COLOR_4 COLOR_BLUE
-#define LAYER_COLOR_5 COLOR_GREEN
-#define LAYER_COLOR_6 COLOR_MAGENTA
-#define LAYER_COLOR_7 COLOR_RED
+#define LAYER_COLOR_2 COLOR_TEAL
+#define LAYER_COLOR_3 COLOR_BLUE
+#define LAYER_COLOR_4 COLOR_GREEN
+#define LAYER_COLOR_5 COLOR_MAGENTA
+#define LAYER_COLOR_6 COLOR_RED
 
 // Layer ID
 //   Standard
@@ -155,20 +155,17 @@ Sometimes results in "] " instead of expected "]"
 //   Startup layer for Windows dip switch position
 //   Allows access to upper layers
 #define L_EXT       1
-//   Mask unused keys
-//   To get closer to 40/100 layout
-#define L_MSK       2
 //   Symbols
-#define L_SYM       3
+#define L_SYM       2
 //   Shifted symbols
-#define L_SYM_SFT   4
+#define L_SYM_SFT   3
 //   Navigation
-#define L_NAV       5
+#define L_NAV       4
 //   Numpad
 //   Accessed via tri layer (L_SYM, L_NAV)
-#define L_NUM       6
+#define L_NUM       5
 //   Function
-#define L_FN        7
+#define L_FN        6
 
 #define TRI_LAYER_LOWER_LAYER   L_SYM
 #define TRI_LAYER_UPPER_LAYER   L_NAV

@@ -9,8 +9,6 @@
 #include "quantum.h"
 #include "keymap_french.h"
 #include "print.h"
-
-#include "accent.h"
 // Lily58 */
 
 #include "config.h"
@@ -19,10 +17,11 @@
 #include "keymap_french.h"
 #include "quantum_keycodes.h"
 
+#include "accent.h"
+
 #ifndef NO_DEBUG
 #include "debug.h"
 #include "print.h"
-#define DEBUG_ON
 #endif
 
 #define HUE_ORANGE (14)
@@ -47,14 +46,6 @@ static bool g_debug_internal = false;
     } \
 } while (0)
 
-static const char * ACCENT_STR[] = {
-    "NONE",
-    "ACU",
-    "GRV",
-    "CIRC",
-    "TRM",
-};
-
 void keyboard_post_init_user(void) {
     // Enabled at runtime via DEBUG keycode
     // debug_enable = true;
@@ -63,7 +54,6 @@ void keyboard_post_init_user(void) {
 
     layer_move(L_STD);
     layer_on(L_EXT);
-    layer_on(L_MSK);
 
     rgb_matrix_enable();
     rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR_LAYER);
@@ -205,13 +195,6 @@ static bool is_shift(keypos_t * keypos) {
 // Handles MOD_RSFT as well
 #define IS_MOD_SHIFT(mod) (mod & MOD_LSFT)
 
-// #ifdef DEBUG_ON
-// static const char * PROCESS_STR[] = {
-//     "PROCESS_CONTINUE",
-//     "PROCESS_STOP",
-// };
-// #endif
-
 // Callback for keycode record
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
     bool ret = PROCESS_CONTINUE;
@@ -258,6 +241,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 #ifdef CAPS_DOUBLE_SHIFT
     // Toggle CAPS on double shift
     // Restrict to (STD | EXT) layer to avoid unexpected CAPS after selection
+    // ERA TBT
+    // if (is_shift_on() && is_shift(&record->event.key) && (get_highest_layer(layer_state) <= L_EXT)) {
     if (is_shift_on() && is_shift(&record->event.key) && !(layer_state & 0b111111000)) {
         if (record->event.pressed) {
             tap_code(KC_CAPS);
@@ -287,7 +272,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         // Check for ESC released in (STD | EXT) layer,
         // To ensure ESC is tapped, and not used to change layer
         else if (GET_KC_KEY(keycode) == KC_ESC) {
-            if (!record->event.pressed && !(layer_state & 0b111111000)) {
+            if (!record->event.pressed && (get_highest_layer(layer_state) <= L_EXT)) {
                 DEBUG_INTERNAL("  ESC released\n");
 
                 // Unregister and tap ESC to complete potential terminal escape sequence
@@ -316,7 +301,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         if (is_accent(keycode) && record->event.pressed) {
             DEBUG_INTERNAL("    Accent\n");
             accent = combine_accent(accent, get_accent(keycode));
-            DEBUG_INTERNAL("      accent == %s\n", ACCENT_STR[accent]);
+            DEBUG_INTERNAL("      accent == %s\n", ACCENT_get_str(accent));
         }
         // Handle direct grave
         else if ((keycode == M_DGRV) && record->event.pressed) {
@@ -352,7 +337,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
             DEBUG_INTERNAL("    Not accentable char\n");
             if (is_accent_drop(keycode)) {
                 accent = ACCENT_NONE;
-                DEBUG_INTERNAL("    accent == %s\n", ACCENT_STR[accent]);
+                DEBUG_INTERNAL("    accent == %s\n", ACCENT_get_str(accent));
             }
 
             goto end;
@@ -369,7 +354,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 
         // Drop accent
         accent = ACCENT_NONE;
-        DEBUG_INTERNAL("    accent == %s\n", ACCENT_STR[accent]);
+        DEBUG_INTERNAL("    accent == %s\n", ACCENT_get_str(accent));
 
         // Accented letter already tapped
         ret = PROCESS_STOP;

@@ -124,7 +124,7 @@ static bool is_layer_on(uint8_t layer) {
 // Does keycode have a destination layer
 static bool has_layer_dst(uint16_t kc)
 {
-    return ((kc >= QK_LAYER_TAP) && (kc <= QK_LAYER_MOD_MAX));
+    return ((kc >= QK_LAYER_TAP) && (kc <= QK_PERSISTENT_DEF_LAYER_MAX));
 }
 
 // Get destination layer from key code
@@ -163,18 +163,26 @@ static uint8_t get_layer_dst(uint16_t kc)
 }
 
 static uint32_t g_iter = 0U;
+static layer_state_t g_last_layer_state = 0U;
+
+#define RENDERING_COMPLETE false
 
 bool SOLID_COLOR_LAYER(effect_params_t* params) {
     // Declare and define min and max LED ids
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
-    // Highest active layer
-    uint8_t highest_layer = get_highest_layer(layer_state);
 
-    if (g_iter == 0xFFF) {
-        g_iter = 0U;
-    } else {
-        g_iter += 1U;
+    if (layer_state == g_last_layer_state) {
+        // No layer change
+        return RENDERING_COMPLETE;
     }
+
+    g_last_layer_state = layer_state;
+
+    // if (g_iter == 0xFFF) {
+    //     g_iter = 0U;
+    // } else {
+    //     g_iter += 1U;
+    // }
 
     if (g_iter == 0U) {
         dprintf("%s()\n", __func__);
@@ -182,26 +190,45 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
         dprintf("  led_max == %02u\n", led_max);
     }
 
+    // Highest active layer
+    uint8_t highest_layer = get_highest_layer(layer_state);
+
+    //* Underglow
+    RGB underglow_rgb;
+    set_rgb_layer(&underglow_rgb, highest_layer);
+
+    dprintf("  Underglow\n");
+
+    // For all underglow and not keylight LEDs
+    for (uint8_t led_id = led_min; led_id < led_max; led_id += 1U) {
+        if (!(g_led_config.flags[led_id] & LED_FLAG_UNDERGLOW) ||
+                (g_led_config.flags[led_id] & LED_FLAG_KEYLIGHT)) {
+            continue;
+        }
+
+        if (g_iter == 0U) {
+            dprintf("    LED %02u\n", led_id);
+            dprintf("      rgb_matrix_set_color(%02u, 0x%02X, 0x%02X, 0x%02X)\n",
+                led_id, underglow_rgb.r, underglow_rgb.g, underglow_rgb.b);
+        }
+
+        rgb_matrix_set_color(led_id, underglow_rgb.r, underglow_rgb.g, underglow_rgb.b);
+    }
+    // Underglow */
+
+    //* Keylight
+    dprintf("  Keylight\n");
+
     for (uint8_t row_idx = 0U; row_idx < MATRIX_ROWS; row_idx += 1U) {
         for (uint8_t col_idx = 0U; col_idx < MATRIX_COLS; col_idx += 1U) {
             uint8_t led_id = g_led_config.matrix_co[row_idx][col_idx];
-
-            if (g_iter == 0U) {
-                dprintf("  row_idx == %02u\n", row_idx);
-                dprintf("  col_idx == %02u\n", col_idx);
-                dprintf("  led_id  == %02u\n", led_id);
-            }
-
             if (led_id == 0xFF || led_id < led_min || led_id >= led_max) {
                 // Invalid LED ID, no LED at position
-                // dprintf("  No LED\n");
                 continue;
             }
 
-            if (!(g_led_config.flags[led_id] & LED_FLAG_KEYLIGHT)) {
-                dprintf("  Not per key LED\n");
-                // ERA TODO handle underglow
-                continue;
+            if (g_iter == 0U) {
+                dprintf("    LED %02u at [%02u][%02u]\n", led_id, row_idx, col_idx);
             }
 
             // Get key code and layer
@@ -225,8 +252,8 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             }
 
             if (g_iter == 0U) {
-                dprintf("  key_code  == %02u == 0x%04X\n", key_code, key_code);
-                dprintf("  key_layer == %02u\n", key_layer);
+                dprintf("      key_code  == %02u == 0x%04X\n", key_code, key_code);
+                dprintf("      key_layer == %02u\n", key_layer);
             }
 
             // Key color
@@ -244,7 +271,7 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
             }
 
             if (g_iter == 0U) {
-                dprintf("  rgb_matrix_set_color(%02u, 0x%02X, 0x%02X, 0x%02X)\n",
+                dprintf("      rgb_matrix_set_color(%02u, 0x%02X, 0x%02X, 0x%02X)\n",
                     led_id, key_rgb.r, key_rgb.g, key_rgb.b);
             }
 
@@ -252,11 +279,9 @@ bool SOLID_COLOR_LAYER(effect_params_t* params) {
         }
     }
 
-    // return led_max < DRIVER_LED_TOTAL;
-    // return true;
+    // Keylight */
 
-    // Rendering complete
-    return false;
+    return RENDERING_COMPLETE;
 }
 
 #   endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS

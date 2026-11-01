@@ -35,7 +35,6 @@ static char g_sLayer[LAYER_STR_LEN] = "";
 static const char * P_LAYER_NAME[] = {
     "STD",
     "EXT",
-    "MSK",
     "SYM",
     "SYM_SFT",
     "NAV",
@@ -74,7 +73,15 @@ bool oled_task_user(void) {
         snprintf(&g_sLayer[0U], LAYER_STR_LEN, "l_high = %u = %-7s", get_highest_layer(layer_state), P_LAYER_NAME[get_highest_layer(layer_state)]);
         oled_write_ln(&g_sLayer[0U], false);
     } else {
-        oled_write_ln("QMK Lily58L", false);
+        // oled_write_ln("QMK Lily58L", false);
+
+        snprintf(&g_sState[0U], STATE_STR_LEN, "l_state = 0x%04X", layer_state);
+        oled_write_ln(&g_sState[0U], false);
+
+        // ERA TODO check array index
+        // ERA TODO padding size
+        snprintf(&g_sLayer[0U], LAYER_STR_LEN, "l_high = %u = %-7s", get_highest_layer(layer_state), P_LAYER_NAME[get_highest_layer(layer_state)]);
+        oled_write_ln(&g_sLayer[0U], false);
     }
 
     return false;
