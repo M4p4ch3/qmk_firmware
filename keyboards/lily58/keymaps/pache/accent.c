@@ -3,6 +3,14 @@
 
 #include "accent.h"
 
+static const char * ACCENT_STR[] = {
+    "NONE",
+    "ACU",
+    "GRV",
+    "CIRC",
+    "TRM",
+};
+
 bool is_accent(uint16_t keycode) {
     switch (keycode) {
     case M_AACU:

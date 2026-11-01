@@ -126,6 +126,9 @@
         }
     },
     "rgb_matrix": {
+        "default": {
+            "on": true
+        },
         "driver": "ws2812",
         "split_count": [35, 35],
         "layout": [

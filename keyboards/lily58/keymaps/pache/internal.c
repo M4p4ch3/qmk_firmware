@@ -47,6 +47,14 @@ static bool g_debug_internal = false;
     } \
 } while (0)
 
+static const char * ACCENT_STR[] = {
+    "NONE",
+    "ACU",
+    "GRV",
+    "CIRC",
+    "TRM",
+};
+
 void keyboard_post_init_user(void) {
     // Enabled at runtime via DEBUG keycode
     // debug_enable = true;
@@ -57,7 +65,8 @@ void keyboard_post_init_user(void) {
     layer_on(L_EXT);
     layer_on(L_MSK);
 
-    // rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR_LAYER);
+    rgb_matrix_enable();
+    rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR_LAYER);
 }
 
 void suspend_power_down_user(void) {

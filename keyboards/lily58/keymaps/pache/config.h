@@ -99,6 +99,8 @@ Sometimes results in "] " instead of expected "]"
 // #define MATRIX_ROWS 14
 // #define MATRIX_COLS 5
 
+#define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
+
 // // RGB matrix default startup settings
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR_LAYER
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_STARTUP_MODE
@@ -116,7 +118,7 @@ Sometimes results in "] " instead of expected "]"
 #define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
 #define DISABLE_RGB_MATRIX_PIXEL_RAIN
 #define DISABLE_RGB_MATRIX_SOLID_COLOR
-#define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
+// #define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
 
 // ERA TODO move to HSV ? To be able to change brightness at runtime, from keymap
 // 0xRRGGBB
