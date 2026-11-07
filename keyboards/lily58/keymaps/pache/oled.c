@@ -42,6 +42,23 @@ static const char * P_LAYER_NAME[] = {
     "FN",
 };
 
+void oled_render_boot(bool bootloader) {
+    oled_clear();
+
+    if (bootloader) {
+        oled_write_P(PSTR("Bootloader "), false);
+    } else {
+        oled_write_P(PSTR("Rebooting "), false);
+    }
+
+    oled_render_dirty(true);
+}
+
+bool shutdown_user(bool jump_to_bootloader) {
+    oled_render_boot(jump_to_bootloader);
+    return true;
+}
+
 // oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 //   if (!is_keyboard_master())
 //     return rotation;
@@ -73,15 +90,7 @@ bool oled_task_user(void) {
         snprintf(&g_sLayer[0U], LAYER_STR_LEN, "l_high = %u = %-7s", get_highest_layer(layer_state), P_LAYER_NAME[get_highest_layer(layer_state)]);
         oled_write_ln(&g_sLayer[0U], false);
     } else {
-        // oled_write_ln("QMK Lily58L", false);
-
-        snprintf(&g_sState[0U], STATE_STR_LEN, "l_state = 0x%04X", layer_state);
-        oled_write_ln(&g_sState[0U], false);
-
-        // ERA TODO check array index
-        // ERA TODO padding size
-        snprintf(&g_sLayer[0U], LAYER_STR_LEN, "l_high = %u = %-7s", get_highest_layer(layer_state), P_LAYER_NAME[get_highest_layer(layer_state)]);
-        oled_write_ln(&g_sLayer[0U], false);
+        oled_write_ln("QMK Lily58L", false);
     }
 
     return false;

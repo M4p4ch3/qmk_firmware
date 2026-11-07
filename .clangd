@@ -8,6 +8,10 @@ CompileFlags:
             -Wno-int-to-void-pointer-cast,
             -DPROGMEM=,
             -DRGB_MATRIX_CUSTOM_EFFECT_IMPLS,
+            -I./lib/pico-sdk/src/common/pico_base/include/,
+            -I./lib/pico-sdk/src/common/pico_base/include/pico/,
+            -I./lib/pico-sdk/src/rp2_common/pico_stdio/include/,
+            -I./lib/pico-sdk/src/rp2_common/pico_stdio/include/pico/,
         ]
     Remove:
         [
