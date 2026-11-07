@@ -13,7 +13,6 @@
 
 #include "config.h"
 #include "keycode.h"
-// #include "keymap.h"
 #include "keymap_french.h"
 #include "quantum_keycodes.h"
 
@@ -23,8 +22,6 @@
 #include "debug.h"
 #include "print.h"
 #endif
-
-#define HUE_ORANGE (14)
 
 // Process should continue (key not processed)
 #define PROCESS_CONTINUE true
@@ -54,23 +51,20 @@ void keyboard_post_init_user(void) {
 
     layer_move(L_STD);
     layer_on(L_EXT);
-
-    rgb_matrix_enable();
-    rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR_LAYER);
 }
 
-void suspend_power_down_user(void) {
-    // // Suspend RGB
-    // rgb_matrix_set_suspend_state(true);
-}
+// void suspend_power_down_user(void) {
+//     // // Suspend RGB
+//     // rgb_matrix_set_suspend_state(true);
+// }
 
-/// TODO: Clean-up workaround
-/// Currently the suspend_wakeup_init_user() has issues. See https://github.com/SonixQMK/qmk_firmware/issues/80
-/// A workaround is to use housekeeping_task_user() instead.
-void housekeeping_task_user(void) {
-    // // Turn on RGB
-    // rgb_matrix_set_suspend_state(false);
-}
+// /// TODO: Clean-up workaround
+// /// Currently the suspend_wakeup_init_user() has issues. See https://github.com/SonixQMK/qmk_firmware/issues/80
+// /// A workaround is to use housekeeping_task_user() instead.
+// void housekeeping_task_user(void) {
+//     // // Turn on RGB
+//     // rgb_matrix_set_suspend_state(false);
+// }
 
 // Similar to layer_(state_cmp, on, off) in tmk_core/common/action_layer.c
 // But working on layer state passed as argument

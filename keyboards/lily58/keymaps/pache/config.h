@@ -29,33 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ERA Debug action
 // #define ACTION_DEBUG
 
-// // #undef RGBLED_NUM
-// #define RGBLIGHT_EFFECT_BREATHING
-// #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-// #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-// #define RGBLIGHT_EFFECT_SNAKE
-// #define RGBLIGHT_EFFECT_KNIGHT
-// #define RGBLIGHT_EFFECT_CHRISTMAS
-// #define RGBLIGHT_EFFECT_STATIC_GRADIENT
-// #define RGBLIGHT_EFFECT_RGB_TEST
-// #define RGBLIGHT_EFFECT_ALTERNATING
-// #define RGBLIGHT_EFFECT_TWINKLE
-// // #define RGBLED_NUM 27
-// // #define RGBLIGHT_LIMIT_VAL 120
-// #define RGBLIGHT_HUE_STEP 10
-// #define RGBLIGHT_SAT_STEP 17
-// #define RGBLIGHT_VAL_STEP 17
-
-// // Underglow
-// //*
-// #undef RGBLED_NUM
-// #define RGBLED_NUM 14    // Number of LEDs
-// #define RGBLIGHT_SLEEP
-// //*/
-
-// #define RGBLIGHT_LAYERS
-// #define RGBLIGHT_LAYERS_AUTO
-
 // Determines what is a tap and what is a hold
 // https://docs.qmk.fm/#/tap_hold?id=tapping-term
 #define TAPPING_TERM 150
@@ -99,50 +72,40 @@ Sometimes results in "] " instead of expected "]"
 // #define MATRIX_ROWS 14
 // #define MATRIX_COLS 5
 
-#define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
-
-// // RGB matrix default startup settings
-#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR_LAYER
-#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_STARTUP_MODE
+// RGB matrix
+#define RGB_MATRIX_SLEEP
+#define RGB_MATRIX_TIMEOUT (60 * 1000)
+#define RGB_MATRIX_SAT_STEP 8
+#define RGB_MATRIX_VAL_STEP 8
+//   Default configuration
 #define RGB_MATRIX_DEFAULT_ON true
-// //   HSV : white
-#define RGB_MATRIX_STARTUP_HUE 127
-#define RGB_MATRIX_STARTUP_SAT 0
-#define RGB_MATRIX_STARTUP_VAL 127
-#define RGB_MATRIX_STARTUP_SPD (0xFF / 3U)
-// ERA TODO
-// Disable optimisation
+//     HSV white
+#define RGB_MATRIX_DEFAULT_HUE 0
+#define RGB_MATRIX_DEFAULT_SAT 0
+#define RGB_MATRIX_DEFAULT_VAL 150
+//   Custom colors. Override hue from color.h
+#define HUE_BLUE    ((uint8_t) (240 * 255 / 360))
+#define HUE_GREEN   ((uint8_t) (120 * 255 / 360))
+#define HUE_ORANGE  ((uint8_t) ( 14 * 255 / 360))
+#define HUE_PINK    ((uint8_t) (300 * 255 / 360))
+#define HUE_RED     ((uint8_t) (  0 * 255 / 360))
+#define HUE_TEAL    ((uint8_t) (180 * 255 / 360))
+#define HUE_YELLOW  ((uint8_t) ( 60 * 255 / 360))
+//   Layer indicator animation
+#define ENABLE_RGB_MATRIX_LAYER
+#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_LAYER
+//     Disable optimisation : All LEDs have to be processed in same cycle
 #define RGB_MATRIX_LED_PROCESS_LIMIT 0
-
-#define DISABLE_RGB_MATRIX_BREATHING
-#define DISABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT
-#define DISABLE_RGB_MATRIX_CYCLE_PINWHEEL
-#define DISABLE_RGB_MATRIX_PIXEL_RAIN
-#define DISABLE_RGB_MATRIX_SOLID_COLOR
-// #define ENABLE_RGB_MATRIX_SOLID_COLOR_LAYER
-
-// ERA TODO move to HSV ? To be able to change brightness at runtime, from keymap
-// 0xRRGGBB
-// 0x<r:2><g:2><b:2>
-#define COLOR_BLACK     0x000000
-#define COLOR_WHITE     0x505050
-#define COLOR_RED       0x500000
-#define COLOR_GREEN     0x005000
-#define COLOR_BLUE      0x000050
-#define COLOR_ORANGE    0x501000
-#define COLOR_YELLOW    0x505000
-#define COLOR_TEAL      0x005050
-#define COLOR_MAGENTA   0x500050
-
-#define LAYER_COLOR_OFF COLOR_BLACK
-#define LAYER_COLOR_DFLT COLOR_WHITE
-#define LAYER_COLOR_0 COLOR_ORANGE
-#define LAYER_COLOR_1 COLOR_YELLOW
-#define LAYER_COLOR_2 COLOR_TEAL
-#define LAYER_COLOR_3 COLOR_BLUE
-#define LAYER_COLOR_4 COLOR_GREEN
-#define LAYER_COLOR_5 COLOR_MAGENTA
-#define LAYER_COLOR_6 COLOR_RED
+//     Configuration
+#define RGB_MATRIX_ANIM_LAYER_HSV_OFF   HSV_BLACK
+#define RGB_MATRIX_ANIM_LAYER_HSV_DFLT  HSV_WHITE
+#define RGB_MATRIX_ANIM_LAYER_HUE_0     HUE_ORANGE
+#define RGB_MATRIX_ANIM_LAYER_HUE_1     HUE_YELLOW
+#define RGB_MATRIX_ANIM_LAYER_HUE_2     HUE_TEAL
+#define RGB_MATRIX_ANIM_LAYER_HUE_3     HUE_BLUE
+#define RGB_MATRIX_ANIM_LAYER_HUE_4     HUE_GREEN
+#define RGB_MATRIX_ANIM_LAYER_HUE_5     HUE_PINK
+#define RGB_MATRIX_ANIM_LAYER_HUE_6     HUE_RED
 
 // Layer ID
 //   Standard
@@ -189,8 +152,5 @@ Sometimes results in "] " instead of expected "]"
 //     RBG Matrix
 #define M_DB_RGB    QK_MACRO_5
 
-
-
-// #include "config_led.h"
-
-#define OLED_DISABLE_TIMEOUT
+// Turns off the OLED screen after 15s of screen update inactivity
+#define OLED_TIMEOUT (15 * 1000)
